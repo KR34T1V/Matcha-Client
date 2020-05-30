@@ -76,7 +76,20 @@ const Register = ({ classes }) => {
 						</Typography>
 					</Grid>
 
-					<Grid item>
+					<Grid item className={classes.item}>
+						<Grid
+							container
+							justify="center"
+							style={{ marginTop: '12px' }}
+						>
+							<img
+								src="https://picsum.photos/200/150"
+								alt="profile"
+							/>
+						</Grid>
+					</Grid>
+
+					<Grid item className={classes.item}>
 						<form onSubmit={(e) => handleSubmit(e)}>
 							<TextField
 								required
@@ -232,7 +245,6 @@ const styles = (theme) => ({
 	},
 	item: {
 		width: '90%',
-		marginLeft: '5%',
 	},
 	button: {
 		color: theme.palette.secondary.main,
