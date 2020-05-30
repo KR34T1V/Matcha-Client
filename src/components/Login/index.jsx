@@ -72,7 +72,7 @@ const Login = ({ classes }) => {
 									variant="contained"
 									className={classes.button}
 								>
-									Sign Up
+									Register
 								</Button>
 							</NavLink>
 						</form>
