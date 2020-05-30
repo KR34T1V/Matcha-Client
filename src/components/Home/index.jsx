@@ -99,6 +99,10 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 		width: '40%',
 		marginLeft: '30%',
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '0',
+		},
 	},
 	item: {
 		width: '90%',
