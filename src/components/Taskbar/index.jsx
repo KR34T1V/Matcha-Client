@@ -18,12 +18,12 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 				<Grid container justify="space-between">
 					<Grid item className={classes.title}>
 						<NavLink to="/" className={classes.link}>
-							<Typography variant="h6" color="secondary">
+							<Typography variant="h5" color="secondary">
 								<b>Matcha</b>
 							</Typography>
 						</NavLink>
 					</Grid>
-					<Grid item style={{ width: '10%' }}>
+					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item className={classes.title}>
 								<NavLink to="/" className={classes.link}>
@@ -51,12 +51,12 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 				<Grid container justify="space-between">
 					<Grid item>
 						<NavLink to="/" className={classes.link}>
-							<Typography variant="h6" color="secondary">
+							<Typography variant="h5" color="secondary">
 								<b>Matcha</b>
 							</Typography>
 						</NavLink>
 					</Grid>
-					<Grid item style={{ width: '15%', marginTop: '4px' }}>
+					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item>
 								<NavLink to="login" className={classes.link}>
@@ -75,7 +75,7 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 										variant="h6"
 										color="secondary"
 									>
-										Sign Up
+										Register
 									</Typography>
 								</NavLink>
 							</Grid>
@@ -96,6 +96,14 @@ const styles = (theme) => ({
 	},
 	ruler: {
 		borderBottom: `1px solid ${theme.palette.secondary.main}`,
+	},
+	right: {
+		[theme.breakpoints.up('sm')]: {
+			width: '15%',
+		},
+		[theme.breakpoints.down('sm')]: {
+			width: '50%',
+		},
 	},
 });
 

@@ -103,6 +103,10 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 		width: '40%',
 		marginLeft: '30%',
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '0',
+		},
 	},
 	item: {
 		width: '90%',
@@ -123,6 +127,10 @@ const styles = (theme) => ({
 		marginLeft: '45%',
 		'&:hover': {
 			borderBottom: `1px dotted ${theme.palette.secondary.main}`,
+		},
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '5%',
 		},
 	},
 });
