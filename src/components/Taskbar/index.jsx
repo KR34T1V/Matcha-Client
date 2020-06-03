@@ -36,9 +36,11 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 								</NavLink>
 							</Grid>
 							<Grid item>
-								<IconButton>
-									<AccountCircle color="secondary" />
-								</IconButton>
+								<NavLink to="profile">
+									<IconButton>
+										<AccountCircle color="secondary" />
+									</IconButton>
+								</NavLink>
 							</Grid>
 						</Grid>
 					</Grid>

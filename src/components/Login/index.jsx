@@ -110,7 +110,6 @@ const styles = (theme) => ({
 	},
 	item: {
 		width: '90%',
-		marginLeft: '5%',
 	},
 	button: {
 		color: theme.palette.secondary.main,

@@ -12,6 +12,7 @@ import Taskbar from '../Taskbar';
 import Home from '../Home';
 import Login from '../Login';
 import Signup from '../Signup';
+import Profile from '../Profile';
 
 const App = ({ location, classes }) => {
 	const isLoggedIn = true;
@@ -23,6 +24,7 @@ const App = ({ location, classes }) => {
 				{isLoggedIn ? (
 					<Switch location={location}>
 						<Route exact path="/" component={Home} />
+						<Route exact path="/profile" component={Profile} />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
 				) : (
