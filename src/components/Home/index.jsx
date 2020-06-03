@@ -60,8 +60,44 @@ const Home = ({ classes }) => {
 							</Grid>
 
 							<Grid item className={classes.item}>
-								<Typography variant="h6" align="center">
+								<Typography
+									variant="h6"
+									align="center"
+									color="primary"
+								>
+									Fame: 110%
+								</Typography>
+							</Grid>
+							<Grid item className={classes.item}>
+								<Typography
+									variant="h6"
+									align="center"
+									color="primary"
+								>
 									Name: {first} {last}
+								</Typography>
+							</Grid>
+
+							<Grid item className={classes.item}>
+								<Typography
+									variant="h6"
+									align="center"
+									color="primary"
+								>
+									Age: 21
+								</Typography>
+							</Grid>
+
+							<Grid item className={classes.item}>
+								<Typography
+									variant="h6"
+									align="center"
+									color="primary"
+								>
+									It is a long established fact that a
+									reader will be distracted by the readable
+									content of a page when looking at its
+									layout.
 								</Typography>
 							</Grid>
 
