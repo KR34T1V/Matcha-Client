@@ -32,7 +32,29 @@ const Register = ({ classes }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(username, pwd);
+		fetch("http://localhost:3030/register", {
+				method: "post",
+				headers: {
+				  'Accept': 'application/json',
+				  'Content-Type': 'application/json'
+				},
+			  
+				//make sure to serialize your JSON body
+				body: JSON.stringify({
+					Username: username,
+					Firstname: first,
+					Lastname: last,
+					Email: email,
+					Password: pwd,
+					RePassword: cpwd,
+					Gender: gender,
+					SexualPreference: preference
+				})
+			})
+			.then( (response) => { 
+			console.log(response);
+			//do something awesome that makes the world a better place
+		});
 	};
 	return (
 		<Grid
@@ -124,14 +146,14 @@ const Register = ({ classes }) => {
 										onChange={handleGender}
 									>
 										<FormControlLabel
-											value="female"
+											value="Female"
 											control={
 												<Radio color="primary" />
 											}
 											label="Female"
 										/>
 										<FormControlLabel
-											value="male"
+											value="Male"
 											control={
 												<Radio color="primary" />
 											}
@@ -153,25 +175,25 @@ const Register = ({ classes }) => {
 										onChange={handlePreference}
 									>
 										<FormControlLabel
-											value="woman"
+											value="Bisexual"
 											control={
 												<Radio color="primary" />
 											}
-											label="Women"
+											label="Bisexual"
 										/>
 										<FormControlLabel
-											value="men"
+											value="Heterosexual"
 											control={
 												<Radio color="primary" />
 											}
-											label="Men"
+											label="Heterosexual"
 										/>
 										<FormControlLabel
-											value="other"
+											value="Homosexual"
 											control={
 												<Radio color="primary" />
 											}
-											label="Other"
+											label="Homosexual"
 										/>
 									</RadioGroup>
 								</Grid>

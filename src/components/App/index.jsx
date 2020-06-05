@@ -15,7 +15,7 @@ import Signup from '../Signup';
 import Profile from '../Profile';
 
 const App = ({ location, classes }) => {
-	const isLoggedIn = true;
+	const isLoggedIn = false;
 
 	return (
 		<Router>

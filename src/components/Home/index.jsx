@@ -20,11 +20,37 @@ const Home = ({ classes }) => {
 	};
 
 	useEffect(() => {
+		const func = async () => {
+			// const data = await fetch('http://localhost:3030/login');
+			fetch("http://localhost:3030/login", {
+				method: "post",
+				headers: {
+				  'Accept': 'application/json',
+				  'Content-Type': 'application/json'
+				},
+			  
+				//make sure to serialize your JSON body
+				body: JSON.stringify({
+				  Email: "LonelyPony@dispostable.com",
+				  Password: "ebolastic"
+				})
+			  })
+			  .then( (response) => { 
+				console.log(response);
+				 //do something awesome that makes the world a better place
+			  });
+			  
+
+			// console.log(data);
+		};
+	
+		func();
+	
 		const arr = [];
 		for (let x = 0; x < 10; x++) {
 			arr.push(profile);
 		}
-
+	
 		setProfiles(arr);
 	}, []);
 
