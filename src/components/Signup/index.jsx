@@ -17,10 +17,11 @@ const Register = ({ classes }) => {
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
 	const [email, setEmail] = useState('');
+	const [dob, setBirthdate ]= useState('');
 	const [pwd, setPwd] = useState('');
 	const [cpwd, setCPwd] = useState('');
-	const [gender, setGender] = useState('female');
-	const [preference, setPreference] = useState('woman');
+	const [gender, setGender] = useState('Female');
+	const [preference, setPreference] = useState('Bisexual');
 
 	const handleGender = (event) => {
 		setGender(event.target.value);
@@ -44,6 +45,7 @@ const Register = ({ classes }) => {
 					Username: username,
 					Firstname: first,
 					Lastname: last,
+					Birthdate: dob,
 					Email: email,
 					Password: pwd,
 					RePassword: cpwd,
@@ -103,6 +105,15 @@ const Register = ({ classes }) => {
 								color="primary"
 								onChange={(e) => setLast(e.target.value)}
 								value={last}
+							/>
+							<TextField
+								required
+								fullWidth
+								label="Birthdate"
+								type="date"
+								color="primary"
+								onChange={(e) => setBirthdate(e.target.value)}
+								value={dob}
 							/>
 							<TextField
 								required

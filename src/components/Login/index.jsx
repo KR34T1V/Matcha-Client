@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
 const Login = ({ classes }) => {
-	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
 
 	const handleSubmit = (e) => {
@@ -24,7 +24,7 @@ const Login = ({ classes }) => {
 			  
 				//make sure to serialize your JSON body
 				body: JSON.stringify({
-				  Email: username,
+				  Email: email,
 				  Password: pwd
 				})
 			  })
@@ -57,10 +57,10 @@ const Login = ({ classes }) => {
 							<TextField
 								required
 								fullWidth
-								label="Username"
+								label="Email"
 								type="input"
 								color="primary"
-								onChange={(e) => setUsername(e.target.value)}
+								onChange={(e) => setEmail(e.target.value)}
 							/>
 
 							<TextField
