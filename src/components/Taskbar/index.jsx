@@ -26,6 +26,16 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item className={classes.title}>
+								<NavLink to="/chats" className={classes.link}>
+									<Typography
+										variant="h6"
+										color="secondary"
+									>
+										Chats
+									</Typography>
+								</NavLink>
+							</Grid>
+							<Grid item className={classes.title}>
 								<NavLink to="/" className={classes.link}>
 									<Typography
 										variant="h6"

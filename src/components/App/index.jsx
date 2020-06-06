@@ -13,6 +13,7 @@ import Home from '../Home';
 import Login from '../Login';
 import Signup from '../Signup';
 import Profile from '../Profile';
+import Chat from '../Chat';
 
 const App = ({ location, classes }) => {
 	const isLoggedIn = true;
@@ -25,6 +26,7 @@ const App = ({ location, classes }) => {
 					<Switch location={location}>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/profile" component={Profile} />
+						<Route exact path="/chats" component={Chat} />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
 				) : (
