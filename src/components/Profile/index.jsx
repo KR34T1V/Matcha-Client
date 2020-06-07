@@ -302,6 +302,17 @@ const Profile = ({ classes, id }) => {
 										</Button>
 									</NavLink>
 
+									<NavLink to={`/liked/${id}`}>
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											See Who Liked Me?
+										</Button>
+									</NavLink>
+
 									<NavLink to="/">
 										<Button
 											fullWidth

@@ -15,6 +15,7 @@ import Signup from '../Signup';
 import Profile from '../Profile';
 import People from '../People';
 import Viewed from '../Viewed';
+import Liked from '../Liked';
 
 const App = ({ location, classes }) => {
 	const isLoggedIn = true;
@@ -31,6 +32,7 @@ const App = ({ location, classes }) => {
 							<Profile id={id} />
 						</Route>
 						<Route exact path="/viewed/:id" component={Viewed} />
+						<Route exact path="/liked/:id" component={Liked} />
 						<Route exact path="/people/:id" component={People} />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
