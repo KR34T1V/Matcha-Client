@@ -16,7 +16,8 @@ import Profile from '../Profile';
 import People from '../People';
 
 const App = ({ location, classes }) => {
-	const isLoggedIn = false;
+	const isLoggedIn = true;
+	const id = 2;
 
 	return (
 		<Router>
@@ -25,7 +26,9 @@ const App = ({ location, classes }) => {
 				{isLoggedIn ? (
 					<Switch location={location}>
 						<Route exact path="/" component={Home} />
-						<Route exact path="/profile" component={Profile} />
+						<Route exact path="/profile">
+							<Profile id={id} />
+						</Route>
 						<Route exact path="/people/:id" component={People} />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>

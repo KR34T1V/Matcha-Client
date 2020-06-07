@@ -8,42 +8,51 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-const Profile = ({ classes }) => {
+const Profile = ({ classes, id }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
 	const [email, setEmail] = useState('');
-	const [gender, setGender] = useState('female');
-	const [preference, setPreference] = useState('woman');
-
-	const tempProfile = {
-		username: 'cterblan',
-		first: 'Corry',
-		last: 'Terblanche',
-		email: 'cterblan@student.wethinkcode.co.za',
-		gender: 'male',
-		preference: 'women',
-	};
+	const [gender, setGender] = useState('');
+	const [preference, setPreference] = useState('');
+	const [avatar, setAvatar] = useState('');
+	const [otherImg, setOtherImg] = useState([]);
+	const [myTags, setMyTags] = useState([]);
+	const [allTags, setAllTags] = useState([]);
 
 	useEffect(() => {
-		setUsername(tempProfile.username);
-		setFirst(tempProfile.first);
-		setLast(tempProfile.last);
-		setEmail(tempProfile.email);
-		setGender(tempProfile.gender);
-		setPreference(tempProfile.preference);
-	}, [
-		tempProfile.email,
-		tempProfile.first,
-		tempProfile.gender,
-		tempProfile.last,
-		tempProfile.preference,
-		tempProfile.username,
-	]);
+		const getCurrentUser = async () => {
+			console.log(id);
+			const raw = await fetch(
+				`http://localhost:8000/currentuser?id=${id}`,
+			);
+			const data = await raw.json();
+			const profile = data.data;
+			setUsername(profile.Username);
+			setFirst(profile.Firstname);
+			setLast(profile.Lastname);
+			setEmail(profile.Email);
+			setGender(profile.Gender);
+			setPreference(profile.SexualPreference);
+			setAvatar(profile.Avatar);
+			setOtherImg(profile.Images);
+			setMyTags(profile.Interests);
+		};
+		getCurrentUser();
+
+		const getTags = async () => {
+			const raw = await fetch('http://localhost:8000/alltags');
+			const data = await raw.json();
+			setAllTags(data.data);
+		};
+		getTags();
+	}, [id]);
 
 	const handleGender = (event) => {
 		setGender(event.target.value);
@@ -55,7 +64,16 @@ const Profile = ({ classes }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(username);
+	};
+
+	const addTag = (e) => {
+		const item = e.target.value;
+
+		if (item != null) {
+			const temp = [...myTags, item];
+			console.log(temp);
+			setMyTags(temp);
+		}
 	};
 	return (
 		<Grid
@@ -65,7 +83,7 @@ const Profile = ({ classes }) => {
 			className={classes.content}
 		>
 			<Paper elevation={4} className={classes.paper}>
-				<Grid container justify="center">
+				<Grid container justify="center" spacing={4}>
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
@@ -76,156 +94,232 @@ const Profile = ({ classes }) => {
 						</Typography>
 					</Grid>
 
-					<Grid item className={classes.item}>
-						<Grid
-							container
-							justify="center"
-							style={{ marginTop: '12px' }}
-						>
-							<img
-								src="https://picsum.photos/200/150"
-								alt="profile"
-							/>
-						</Grid>
-					</Grid>
-
-					<Grid item className={classes.item}>
-						<form onSubmit={(e) => handleSubmit(e)}>
-							<TextField
-								required
-								fullWidth
-								label="Username"
-								type="input"
-								color="primary"
-								onChange={(e) => setUsername(e.target.value)}
-								value={username}
-							/>
-							<TextField
-								required
-								fullWidth
-								label="First Name"
-								type="input"
-								color="primary"
-								onChange={(e) => setFirst(e.target.value)}
-								value={first}
-							/>
-							<TextField
-								required
-								fullWidth
-								label="Last Name"
-								type="input"
-								color="primary"
-								onChange={(e) => setLast(e.target.value)}
-								value={last}
-							/>
-							<TextField
-								required
-								fullWidth
-								label="Email"
-								type="email"
-								color="primary"
-								onChange={(e) => setEmail(e.target.value)}
-								value={email}
-							/>
-							<Grid container justify="space-evenly">
-								<Grid item>
-									<Typography
-										variant="h6"
-										align="center"
-										className={classes.radioTitle}
-									>
-										Gender
-									</Typography>
-									<RadioGroup
-										aria-label="gender"
-										value={gender}
-										onChange={handleGender}
-									>
-										<FormControlLabel
-											value="female"
-											control={
-												<Radio color="primary" />
-											}
-											label="Female"
-										/>
-										<FormControlLabel
-											value="male"
-											control={
-												<Radio color="primary" />
-											}
-											label="Male"
-										/>
-									</RadioGroup>
-								</Grid>
-								<Grid item>
-									<Typography
-										variant="h6"
-										align="center"
-										className={classes.radioTitle}
-									>
-										Preference
-									</Typography>
-									<RadioGroup
-										aria-label="preference"
-										value={preference}
-										onChange={handlePreference}
-									>
-										<FormControlLabel
-											value="women"
-											control={
-												<Radio color="primary" />
-											}
-											label="Women"
-										/>
-										<FormControlLabel
-											value="men"
-											control={
-												<Radio color="primary" />
-											}
-											label="Men"
-										/>
-										<FormControlLabel
-											value="other"
-											control={
-												<Radio color="primary" />
-											}
-											label="Other"
-										/>
-									</RadioGroup>
+					{username !== '' ? (
+						<>
+							<Grid item className={classes.item}>
+								<Grid
+									container
+									justify="center"
+									style={{ marginTop: '12px' }}
+								>
+									<img
+										src={avatar}
+										alt="avatar"
+										style={{
+											borderRadius: '10px',
+											marginBottom: '16px',
+										}}
+									/>
 								</Grid>
 							</Grid>
-							<Button
-								fullWidth
-								type="submit"
-								variant="contained"
-								className={classes.button}
-							>
-								Save Changes
-							</Button>
 
-							<NavLink to="reset">
-								<Button
-									fullWidth
-									type="submit"
-									variant="contained"
-									className={classes.button}
-								>
-									Change your password?
-								</Button>
-							</NavLink>
+							<Grid item className={classes.item}>
+								<Grid container justify="space-evenly">
+									{otherImg.map((img) => (
+										<img
+											src={img}
+											alt="other"
+											className={classes.otherImg}
+											style={{ borderRadius: '10px' }}
+										/>
+									))}
+								</Grid>
+							</Grid>
 
-							<NavLink to="/">
-								<Button
-									fullWidth
-									type="submit"
-									variant="contained"
-									className={classes.button}
-								>
-									Back To Home
-								</Button>
-							</NavLink>
-						</form>
-					</Grid>
+							<Grid item className={classes.item}>
+								<form onSubmit={(e) => handleSubmit(e)}>
+									<TextField
+										required
+										fullWidth
+										label="Username"
+										type="input"
+										color="primary"
+										onChange={(e) =>
+											setUsername(e.target.value)
+										}
+										value={username}
+									/>
+									<TextField
+										required
+										fullWidth
+										label="First Name"
+										type="input"
+										color="primary"
+										onChange={(e) =>
+											setFirst(e.target.value)
+										}
+										value={first}
+									/>
+									<TextField
+										required
+										fullWidth
+										label="Last Name"
+										type="input"
+										color="primary"
+										onChange={(e) =>
+											setLast(e.target.value)
+										}
+										value={last}
+									/>
+									<TextField
+										required
+										fullWidth
+										label="Email"
+										type="email"
+										color="primary"
+										onChange={(e) =>
+											setEmail(e.target.value)
+										}
+										value={email}
+									/>
+									<Grid container justify="space-evenly">
+										<Grid item>
+											<Typography
+												variant="h6"
+												align="center"
+												className={classes.radioTitle}
+											>
+												Gender
+											</Typography>
+											<RadioGroup
+												aria-label="gender"
+												value={gender}
+												onChange={handleGender}
+											>
+												<FormControlLabel
+													value="Female"
+													control={
+														<Radio color="primary" />
+													}
+													label="Female"
+												/>
+												<FormControlLabel
+													value="Male"
+													control={
+														<Radio color="primary" />
+													}
+													label="Male"
+												/>
+											</RadioGroup>
+										</Grid>
+										<Grid item>
+											<Typography
+												variant="h6"
+												align="center"
+												className={classes.radioTitle}
+											>
+												Preference
+											</Typography>
+											<RadioGroup
+												aria-label="preference"
+												value={preference}
+												onChange={handlePreference}
+											>
+												<FormControlLabel
+													value="Homosexual"
+													control={
+														<Radio color="primary" />
+													}
+													label="Homosexual"
+												/>
+												<FormControlLabel
+													value="Heterosexual"
+													control={
+														<Radio color="primary" />
+													}
+													label="Heterosexual"
+												/>
+												<FormControlLabel
+													value="Bisexual"
+													control={
+														<Radio color="primary" />
+													}
+													label="Bisexual"
+												/>
+											</RadioGroup>
+										</Grid>
+									</Grid>
+
+									<Grid item>
+										<Grid
+											container
+											justify="space-evenly"
+										>
+											{allTags.map((tag) => (
+												<Grid item>
+													<FormControlLabel
+														value={tag}
+														control={
+															<Checkbox
+																color="primary"
+																checked={
+																	myTags.indexOf(
+																		tag,
+																	) !== -1
+																		? true
+																		: false
+																}
+															/>
+														}
+														label={tag}
+														onClick={(e) =>
+															addTag(e)
+														}
+													/>
+												</Grid>
+											))}
+										</Grid>
+									</Grid>
+
+									<Button
+										fullWidth
+										type="submit"
+										variant="contained"
+										className={classes.button}
+									>
+										Save Changes
+									</Button>
+
+									<NavLink to="/reset">
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											Change your password?
+										</Button>
+									</NavLink>
+
+									<NavLink to={`/viewed/${id}`}>
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											See Who viewed Me?
+										</Button>
+									</NavLink>
+
+									<NavLink to="/">
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											Back To Home
+										</Button>
+									</NavLink>
+								</form>
+							</Grid>
+						</>
+					) : (
+						<Grid item>
+							<CircularProgress variant="indeterminate" />
+						</Grid>
+					)}
 				</Grid>
 			</Paper>
 		</Grid>
@@ -242,6 +336,10 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 		width: '40%',
 		marginLeft: '30%',
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '0',
+		},
 	},
 	item: {
 		width: '90%',
@@ -249,8 +347,8 @@ const styles = (theme) => ({
 	button: {
 		color: theme.palette.secondary.main,
 		backgroundColor: theme.palette.primary.main,
-		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2),
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1),
 	},
 	link: {
 		textDecoration: 'none',
@@ -265,6 +363,10 @@ const styles = (theme) => ({
 	},
 	radioTitle: {
 		borderBottom: `1px dotted ${theme.palette.primary.main}`,
+	},
+	otherImg: {
+		width: '30%',
+		marginBottom: theme.spacing(2),
 	},
 });
 
