@@ -16,7 +16,7 @@ import Profile from '../Profile';
 import People from '../People';
 
 const App = ({ location, classes }) => {
-	const isLoggedIn = true;
+	const isLoggedIn = false;
 
 	return (
 		<Router>

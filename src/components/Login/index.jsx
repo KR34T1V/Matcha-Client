@@ -15,7 +15,23 @@ const Login = ({ classes }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(username, pwd);
+		fetch("http://localhost:3030/login", {
+				method: "post",
+				headers: {
+				  'Accept': 'application/json',
+				  'Content-Type': 'application/json'
+				},
+			  
+				//make sure to serialize your JSON body
+				body: JSON.stringify({
+				  Email: username,
+				  Password: pwd
+				})
+			  })
+			  .then( (response) => { 
+				console.log(response);
+				 //do something awesome that makes the world a better place
+			  });
 	};
 	return (
 		<Grid
