@@ -14,7 +14,7 @@ const Viewed = ({ classes, match }) => {
 	useEffect(() => {
 		const fetchViewed = async () => {
 			const raw = await fetch(
-				`http://localhost:8000/getProfileViews?id=${id}`,
+				`http://localhost:3030/getProfileViews?id=${id}`,
 			);
 			const data = await raw.json();
 			setViewers(data.data);

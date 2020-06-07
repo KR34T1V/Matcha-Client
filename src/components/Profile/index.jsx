@@ -30,7 +30,7 @@ const Profile = ({ classes, id }) => {
 		const getCurrentUser = async () => {
 			console.log(id);
 			const raw = await fetch(
-				`http://localhost:8000/currentuser?id=${id}`,
+				`http://localhost:3030/currentuser?id=${id}`,
 			);
 			const data = await raw.json();
 			const profile = data.data;
@@ -47,7 +47,7 @@ const Profile = ({ classes, id }) => {
 		getCurrentUser();
 
 		const getTags = async () => {
-			const raw = await fetch('http://localhost:8000/alltags');
+			const raw = await fetch('http://localhost:3030/alltags');
 			const data = await raw.json();
 			setAllTags(data.data);
 		};

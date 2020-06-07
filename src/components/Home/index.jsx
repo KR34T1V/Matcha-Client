@@ -11,148 +11,125 @@ import { NavLink } from 'react-router-dom';
 const Home = ({ classes }) => {
 	const [profiles, setProfiles] = useState([]);
 
-	const profile = {
-		username: "cterblan's GF",
-		first: 'Corry',
-		last: "Terblanche's GF",
-		email: 'cterblan@student.wethinkcode.co.za',
-		gender: 'male',
-		preference: 'women',
-	};
-
 	useEffect(() => {
-		const func = async () => {
-			// const data = await fetch('http://localhost:3030/login');
-			fetch("http://localhost:3030/login", {
-				method: "post",
-				headers: {
-				  'Accept': 'application/json',
-				  'Content-Type': 'application/json'
-				},
-			  
-				//make sure to serialize your JSON body
-				body: JSON.stringify({
-				  Email: "LonelyPony@dispostable.com",
-				  Password: "ebolastic"
-				})
-			  })
-			  .then( (response) => { 
-				console.log(response);
-				 //do something awesome that makes the world a better place
-			  });
-			  
-
-			// console.log(data);
+		const getProfiles = async () => {
+			const accessToken = '$2a$04$2Or2zMRgOgdG7SYN.I5ZQu';
+			const raw = await fetch(
+				`http://localhost:3030/home?AccessToken=${accessToken}`,
+			);
+			const data = await raw.json();
+			const temp = data.data;
+			console.log(temp);
+			setProfiles(data.data);
 		};
-	
-		func();
-	
-		const arr = [];
-		for (let x = 0; x < 10; x++) {
-			arr.push({
-				...profile,
-				id: x,
-			});
-		}
-	
-		setProfiles(arr);
+
+		getProfiles();
 	}, []);
 
 	return (
 		<>
-			{profiles.map(({ username, first, last, id }, i) => (
-				<Grid
-					container
-					justify="center"
-					direction="column"
-					className={classes.content}
-				>
-					<Paper elevation={4} className={classes.paper}>
-						<Grid container justify="center" spacing={2}>
-							<Grid item className={classes.item}>
-								<Typography
-									variant="h4"
-									align="center"
-									color="primary"
-								>
-									{username}
-								</Typography>
-							</Grid>
-
-							<Grid item className={classes.item}>
-								<Grid container justify="center">
-									<img
-										src={`https://picsum.photos/400/250?random=${i}`}
-										alt="profile"
-										style={{ borderRadius: '10px' }}
-									/>
+			{profiles.map(
+				({
+					Username,
+					Firstname,
+					Lastname,
+					Id,
+					Avatar,
+					FameRating,
+					Age,
+					Biography,
+				}) => (
+					<Grid
+						container
+						justify="center"
+						direction="column"
+						className={classes.content}
+						key={Id}
+					>
+						<Paper elevation={4} className={classes.paper}>
+							<Grid container justify="center" spacing={2}>
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h4"
+										align="center"
+										color="primary"
+									>
+										{Username}
+									</Typography>
 								</Grid>
-							</Grid>
 
-							<Grid item className={classes.item}>
-								<Typography
-									variant="h6"
-									align="center"
-									color="primary"
-								>
-									Fame: 110%
-								</Typography>
-							</Grid>
-							<Grid item className={classes.item}>
-								<Typography
-									variant="h6"
-									align="center"
-									color="primary"
-								>
-									Name: {first} {last}
-								</Typography>
-							</Grid>
+								<Grid item className={classes.item}>
+									<Grid container justify="center">
+										<img
+											src={Avatar}
+											alt="profile"
+											style={{ borderRadius: '10px' }}
+										/>
+									</Grid>
+								</Grid>
 
-							<Grid item className={classes.item}>
-								<Typography
-									variant="h6"
-									align="center"
-									color="primary"
-								>
-									Age: 21
-								</Typography>
-							</Grid>
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h6"
+										align="center"
+										color="primary"
+									>
+										Fame: {FameRating.toFixed(2)}%
+									</Typography>
+								</Grid>
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h6"
+										align="center"
+										color="primary"
+									>
+										Name: {Firstname} {Lastname}
+									</Typography>
+								</Grid>
 
-							<Grid item className={classes.item}>
-								<Typography
-									variant="h6"
-									align="center"
-									color="primary"
-								>
-									It is a long established fact that a
-									reader will be distracted by the readable
-									content of a page when looking at its
-									layout.
-								</Typography>
-							</Grid>
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h6"
+										align="center"
+										color="primary"
+									>
+										Age: {Age}
+									</Typography>
+								</Grid>
 
-							<Grid item className={classes.item}>
-								<NavLink to={`/people/${id}`}>
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h6"
+										align="center"
+										color="primary"
+									>
+										{Biography}
+									</Typography>
+								</Grid>
+
+								<Grid item className={classes.item}>
+									<NavLink to={`/people/${Id}`}>
+										<Button
+											fullWidth
+											variant="contained"
+											className={classes.button}
+										>
+											View Profile
+										</Button>
+									</NavLink>
 									<Button
 										fullWidth
 										variant="contained"
 										className={classes.button}
 									>
-										View Profile
+										Yes please!
 									</Button>
-								</NavLink>
-								<Button
-									fullWidth
-									variant="contained"
-									className={classes.button}
-								>
-									Yes please!
-								</Button>
+								</Grid>
 							</Grid>
-						</Grid>
-					</Paper>
-				</Grid>
-			))}
+						</Paper>
+					</Grid>
+				),
+			)}
 		</>
 	);
 };

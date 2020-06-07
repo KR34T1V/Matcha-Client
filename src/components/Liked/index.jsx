@@ -14,7 +14,7 @@ const Liked = ({ classes, match }) => {
 	useEffect(() => {
 		const getLikes = async () => {
 			const raw = await fetch(
-				`http://localhost:8000/getProfileLikes?id=${id}`,
+				`http://localhost:3030/getProfileLikes?id=${id}`,
 			);
 			const data = await raw.json();
 			setLikers(data.data);
