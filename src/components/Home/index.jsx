@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { NavLink } from 'react-router-dom';
 
 const Home = ({ classes }) => {
 	const [profiles, setProfiles] = useState([]);
@@ -22,7 +23,10 @@ const Home = ({ classes }) => {
 	useEffect(() => {
 		const arr = [];
 		for (let x = 0; x < 10; x++) {
-			arr.push(profile);
+			arr.push({
+				...profile,
+				id: x,
+			});
 		}
 
 		setProfiles(arr);
@@ -30,7 +34,7 @@ const Home = ({ classes }) => {
 
 	return (
 		<>
-			{profiles.map(({ username, first, last }, i) => (
+			{profiles.map(({ username, first, last, id }, i) => (
 				<Grid
 					container
 					justify="center"
@@ -102,13 +106,15 @@ const Home = ({ classes }) => {
 							</Grid>
 
 							<Grid item className={classes.item}>
-								<Button
-									fullWidth
-									variant="contained"
-									className={classes.button}
-								>
-									View Profile
-								</Button>
+								<NavLink to={`/people/${id}`}>
+									<Button
+										fullWidth
+										variant="contained"
+										className={classes.button}
+									>
+										View Profile
+									</Button>
+								</NavLink>
 								<Button
 									fullWidth
 									variant="contained"
