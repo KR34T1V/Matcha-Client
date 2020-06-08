@@ -8,12 +8,11 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 
-const Home = ({ classes }) => {
+const Home = ({ classes, accessToken }) => {
 	const [profiles, setProfiles] = useState([]);
 
 	useEffect(() => {
 		const getProfiles = async () => {
-			const accessToken = '$2a$04$2Or2zMRgOgdG7SYN.I5ZQu';
 			const raw = await fetch(
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);

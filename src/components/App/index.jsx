@@ -36,8 +36,8 @@ const App = ({ location, classes }) => {
 
 		const data = await raw.json();
 		if (data.data.AccessToken != null) {
-			setLoggedIn(true);
 			setAccessToken(data.data.AccessToken);
+			setLoggedIn(true);
 		}
 	};
 
@@ -47,7 +47,9 @@ const App = ({ location, classes }) => {
 				<Taskbar isLoggedIn={loggedIn} />
 				{loggedIn ? (
 					<Switch location={location}>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/">
+							<Home accessToken={accessToken} />
+						</Route>
 						<Route exact path="/profile">
 							<Profile accessToken={accessToken} />
 						</Route>
