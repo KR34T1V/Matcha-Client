@@ -9,30 +9,15 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
-const Login = ({ classes }) => {
+const Login = ({ classes, logIn }) => {
 	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch("http://localhost:3030/login", {
-				method: "post",
-				headers: {
-				  'Accept': 'application/json',
-				  'Content-Type': 'application/json'
-				},
-			  
-				//make sure to serialize your JSON body
-				body: JSON.stringify({
-				  Email: email,
-				  Password: pwd
-				})
-			  })
-			  .then( (response) => { 
-				console.log(response);
-				 //do something awesome that makes the world a better place
-			  });
+		logIn(email, pwd);
 	};
+
 	return (
 		<Grid
 			container

@@ -7,14 +7,13 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
-const Liked = ({ classes, match }) => {
-	const id = match.params.id;
+const Liked = ({ classes, accessToken }) => {
 	const [likers, setLikers] = useState('');
 
 	useEffect(() => {
 		const getLikes = async () => {
 			const raw = await fetch(
-				`http://localhost:3030/getProfileLikes?id=${id}`,
+				`http://localhost:3030/getProfileLikes?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
 			setLikers(data.data);

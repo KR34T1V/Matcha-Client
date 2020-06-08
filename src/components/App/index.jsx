@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -18,28 +18,55 @@ import Viewed from '../Viewed';
 import Liked from '../Liked';
 
 const App = ({ location, classes }) => {
-	const isLoggedIn = true;
-	const id = 2;
+	const [loggedIn, setLoggedIn] = useState(false);
+	const [accessToken, setAccessToken] = useState('');
+
+	const logInUser = async (email, pwd) => {
+		const raw = await fetch('http://localhost:3030/login', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				Email: email,
+				Password: pwd,
+			}),
+		});
+
+		const data = await raw.json();
+		if (data.data.AccessToken != null) {
+			setLoggedIn(true);
+			setAccessToken(data.data.AccessToken);
+		}
+	};
 
 	return (
 		<Router>
 			<div className={classes.content}>
-				<Taskbar isLoggedIn={isLoggedIn} />
-				{isLoggedIn ? (
+				<Taskbar isLoggedIn={loggedIn} />
+				{loggedIn ? (
 					<Switch location={location}>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/profile">
-							<Profile id={id} />
+							<Profile accessToken={accessToken} />
 						</Route>
-						<Route exact path="/viewed/:id" component={Viewed} />
-						<Route exact path="/liked/:id" component={Liked} />
+						<Route exact path="/viewed">
+							<Viewed accessToken={accessToken} />
+						</Route>
+						<Route exact path="/liked">
+							<Liked accessToken={accessToken} />
+						</Route>
 						<Route exact path="/people/:id" component={People} />
+						<Redirect from="/login" to="/" />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
 				) : (
 					<Switch location={location}>
 						<Redirect exact from="/" to="/login" />
-						<Route path="/login/:nextRoute*" component={Login} />
+						<Route path="/login">
+							<Login logIn={logInUser} />
+						</Route>
 						<Route path="/signup" component={Signup} />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>

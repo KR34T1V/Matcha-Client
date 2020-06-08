@@ -18,8 +18,6 @@ const Home = ({ classes }) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			const temp = data.data;
-			console.log(temp);
 			setProfiles(data.data);
 		};
 

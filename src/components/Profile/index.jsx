@@ -14,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const Profile = ({ classes, id }) => {
+const Profile = ({ classes, accessToken }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -28,9 +28,8 @@ const Profile = ({ classes, id }) => {
 
 	useEffect(() => {
 		const getCurrentUser = async () => {
-			console.log(id);
 			const raw = await fetch(
-				`http://localhost:3030/currentuser?id=${id}`,
+				`http://localhost:3030/currentuser?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
 			const profile = data.data;
@@ -52,7 +51,7 @@ const Profile = ({ classes, id }) => {
 			setAllTags(data.data);
 		};
 		getTags();
-	}, [id]);
+	}, [accessToken]);
 
 	const handleGender = (event) => {
 		setGender(event.target.value);
@@ -291,7 +290,7 @@ const Profile = ({ classes, id }) => {
 										</Button>
 									</NavLink>
 
-									<NavLink to={`/viewed/${id}`}>
+									<NavLink to={`/viewed`}>
 										<Button
 											fullWidth
 											type="submit"
@@ -302,7 +301,7 @@ const Profile = ({ classes, id }) => {
 										</Button>
 									</NavLink>
 
-									<NavLink to={`/liked/${id}`}>
+									<NavLink to={`/liked`}>
 										<Button
 											fullWidth
 											type="submit"

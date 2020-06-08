@@ -7,14 +7,13 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
-const Viewed = ({ classes, match }) => {
-	const id = match.params.id;
+const Viewed = ({ classes, accessToken }) => {
 	const [viewers, setViewers] = useState('');
 
 	useEffect(() => {
 		const fetchViewed = async () => {
 			const raw = await fetch(
-				`http://localhost:3030/getProfileViews?id=${id}`,
+				`http://localhost:3030/getProfileViews?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
 			setViewers(data.data);
