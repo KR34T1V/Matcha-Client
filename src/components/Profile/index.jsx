@@ -29,28 +29,24 @@ const Profile = ({ classes, accessToken }) => {
 	useEffect(() => {
 		const getCurrentUser = async () => {
 			const raw = await fetch(
-				`http://localhost:3030/currentuser?AccessToken=${accessToken}`,
+				`http://localhost:3030/user/profile?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			const profile = data.data;
-			setUsername(profile.Username);
-			setFirst(profile.Firstname);
-			setLast(profile.Lastname);
-			setEmail(profile.Email);
-			setGender(profile.Gender);
-			setPreference(profile.SexualPreference);
-			setAvatar(profile.Avatar);
-			setOtherImg(profile.Images);
-			setMyTags(profile.Interests);
+			if (data.data != null){
+				const profile = data.data;
+				setUsername(profile.Username);
+				setFirst(profile.Firstname);
+				setLast(profile.Lastname);
+				setEmail(profile.Email);
+				setGender(profile.Gender);
+				setPreference(profile.SexualPreference);
+				setAvatar(profile.Avatar);
+				if (profile.Images != null && profile.Images.length > 0)
+					setOtherImg(profile.Images);
+				setMyTags(profile.Interests);
+			}
 		};
 		getCurrentUser();
-
-		const getTags = async () => {
-			const raw = await fetch('http://localhost:3030/alltags');
-			const data = await raw.json();
-			setAllTags(data.data);
-		};
-		getTags();
 	}, [accessToken]);
 
 	const handleGender = (event) => {

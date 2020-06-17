@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 
@@ -12,7 +12,22 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/ReportOutlined';
 
-const People = ({ classes }) => {
+const People = ({ classes, accessToken}) => {
+	const [username, setUsername] = useState([]);
+	const [firstname, setFirstname] = useState([]);
+	const [lastname, setLastname] = useState([]);
+	const [gender, setGender] = useState([]);
+	const [preference, setPreference] = useState([]);
+	const [age, setAge] = useState([]);
+	const [bio, setBio] = useState([]);
+	const [tags, setTags] = useState([]);
+	const [geo, setGeo] = useState([]);
+	const [fame, setFame] = useState([]);
+	const [avatar, setAvatar] = useState([]);
+	const [otherImg, setOtherImg] = useState([]);
+	const [lastOnline, setLastOnline] = useState([]);
+
+
 	const tempProfile = {
 		username: 'RespectfulCat',
 		first: 'Insecure',
@@ -37,6 +52,31 @@ const People = ({ classes }) => {
 		],
 		lastOnline: moment('2020/05/06 16:44:22').fromNow(),
 	};
+
+	useEffect(() => {
+		const getProfiles = async () => {
+			const raw = await fetch(
+				`http://localhost:3030/home?AccessToken=${accessToken}`,
+			);
+			const data = await raw.json();
+			if (data.data != null && data.data.length > 0) {
+				setUsername(data.data.Username);
+				setFirstname(data.data.Firstname);
+				setLastname(data.data.Lastname);
+				setGender(data.data.Gender);
+				setPreference(data.data.SexualPreference);
+				setAge(data.data.Age);
+				setBio(data.data.Biography);
+				setTags(data.data.Interests);
+				setGeo(data.data.Location);
+				setFame(data.data.Fame);
+				setAvatar(data.data.Avatar);
+				setOtherImg(data.data.Images);
+				setLastOnline(data.data.AccessTime);
+			}
+		};
+		getProfiles();
+	}, []);
 
 	return (
 		<Grid

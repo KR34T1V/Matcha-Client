@@ -17,7 +17,7 @@ const Home = ({ classes, accessToken }) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			if (data.data.length > 0) {
+			if (data.data != null && data.data.length > 0) {
 				setProfiles(data.data);
 			}
 		};
