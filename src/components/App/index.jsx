@@ -17,7 +17,7 @@ import People from '../People';
 import Viewed from '../Viewed';
 import Liked from '../Liked';
 
-const App = ({ location, classes }) => {
+const App = ({ location, classes}) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [accessToken, setAccessToken] = useState('');
 
@@ -59,7 +59,9 @@ const App = ({ location, classes }) => {
 						<Route exact path="/liked">
 							<Liked accessToken={accessToken} />
 						</Route>
-						<Route exact path="/people/:id" component={People} />
+						<Route exact path="/people/:id" >
+							<People accessToken={accessToken} />
+						</Route>
 						<Redirect from="/login" to="/" />
 						<Route render={() => <div>Not found</div>} />
 					</Switch>

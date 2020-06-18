@@ -19,7 +19,7 @@ const Liked = ({ classes, accessToken }) => {
 			setLikers(data.data);
 		};
 		getLikes();
-	}, []);
+	}, [accessToken]);
 
 	return (
 		<Grid

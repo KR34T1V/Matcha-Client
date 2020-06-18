@@ -40,7 +40,8 @@ const Profile = ({ classes, accessToken }) => {
 				setEmail(profile.Email);
 				setGender(profile.Gender);
 				setPreference(profile.SexualPreference);
-				setAvatar(profile.Avatar);
+				if (profile.Avatar != null)
+					setAvatar(profile.Avatar);
 				if (profile.Images != null && profile.Images.length > 0)
 					setOtherImg(profile.Images);
 				setMyTags(profile.Interests);

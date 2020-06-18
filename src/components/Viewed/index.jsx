@@ -19,7 +19,7 @@ const Viewed = ({ classes, accessToken }) => {
 			setViewers(data.data);
 		};
 		fetchViewed();
-	}, []);
+	}, [accessToken]);
 
 	return (
 		<Grid

@@ -23,7 +23,7 @@ const Home = ({ classes, accessToken }) => {
 		};
 
 		getProfiles();
-	}, []);
+	}, [accessToken]);
 
 	return (
 		<>
