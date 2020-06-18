@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
-const Login = ({ classes, logIn }) => {
+const Login = ({ classes, logIn, errors, setErrors }) => {
 	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
 
@@ -37,7 +37,7 @@ const Login = ({ classes, logIn }) => {
 						</Typography>
 					</Grid>
 
-					<Grid item>
+					<Grid item style={{ width: '100%' }}>
 						<form onSubmit={(e) => handleSubmit(e)}>
 							<TextField
 								required
@@ -56,6 +56,18 @@ const Login = ({ classes, logIn }) => {
 								color="primary"
 								onChange={(e) => setPwd(e.target.value)}
 							/>
+
+							{errors.map((msg) => (
+								<Grid item>
+									<Typography
+										key={msg}
+										variant="body1"
+										color="primary"
+									>
+										{msg}
+									</Typography>
+								</Grid>
+							))}
 
 							<Button
 								fullWidth

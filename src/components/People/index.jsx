@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/ReportOutlined';
 
-const People = ({ classes, accessToken}) => {
+const People = ({ classes, accessToken }) => {
 	const tempProfile = {
 		username: 'username',
 		first: 'Insecure',

@@ -17,9 +17,10 @@ import People from '../People';
 import Viewed from '../Viewed';
 import Liked from '../Liked';
 
-const App = ({ location, classes}) => {
+const App = ({ location, classes }) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [accessToken, setAccessToken] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	const logInUser = async (email, pwd) => {
 		const raw = await fetch('http://localhost:3030/login', {
@@ -35,9 +36,14 @@ const App = ({ location, classes}) => {
 		});
 
 		const data = await raw.json();
-		if (data.data != null && data.data.AccessToken != null) {
+
+		if (data.error != null) {
+			setErrors(data.error);
+		} else if (data.data != null && data.data.AccessToken != null) {
 			setAccessToken(data.data.AccessToken);
 			setLoggedIn(true);
+		} else {
+			setErrors(['Network Error']);
 		}
 	};
 
@@ -59,7 +65,7 @@ const App = ({ location, classes}) => {
 						<Route exact path="/liked">
 							<Liked accessToken={accessToken} />
 						</Route>
-						<Route exact path="/people/:id" >
+						<Route exact path="/people/:id">
 							<People accessToken={accessToken} />
 						</Route>
 						<Redirect from="/login" to="/" />
@@ -69,7 +75,11 @@ const App = ({ location, classes}) => {
 					<Switch location={location}>
 						<Redirect exact from="/" to="/login" />
 						<Route path="/login">
-							<Login logIn={logInUser} />
+							<Login
+								logIn={logInUser}
+								errors={errors}
+								setErrors={setErrors}
+							/>
 						</Route>
 						<Route path="/signup" component={Signup} />
 						<Route render={() => <div>Not found</div>} />
