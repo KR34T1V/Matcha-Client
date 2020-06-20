@@ -16,6 +16,8 @@ import Profile from '../Profile';
 import People from '../People';
 import Viewed from '../Viewed';
 import Liked from '../Liked';
+import PasswordReset from '../PasswordReset';
+import VerifyEmail from '../VerifyEmail';
 
 const App = ({ location, classes }) => {
 	const [loggedIn, setLoggedIn] = useState(false);
@@ -37,7 +39,7 @@ const App = ({ location, classes }) => {
 
 		const data = await raw.json();
 
-		if (data.error != null) {
+		if (data.errors != null) {
 			setErrors(data.error);
 		} else if (data.data != null && data.data.AccessToken != null) {
 			setAccessToken(data.data.AccessToken);
@@ -82,6 +84,8 @@ const App = ({ location, classes }) => {
 							/>
 						</Route>
 						<Route path="/signup" component={Signup} />
+						<Route exact path="/passwordReset" component={PasswordReset}/>
+						<Route exact path="/verifyEmail" component={VerifyEmail}/>
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
 				)}

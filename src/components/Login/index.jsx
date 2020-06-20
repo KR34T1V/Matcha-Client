@@ -92,7 +92,7 @@ const Login = ({ classes, logIn, errors, setErrors }) => {
 					</Grid>
 				</Grid>
 			</Paper>
-			<NavLink to="password-reset" className={classes.link}>
+			<NavLink to="passwordReset" className={classes.link}>
 				<Typography
 					variant="body1"
 					color="secondary"
