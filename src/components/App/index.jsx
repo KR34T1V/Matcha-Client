@@ -63,7 +63,11 @@ const App = ({ location, classes }) => {
 	return (
 		<Router>
 			<div className={classes.content}>
-				<Taskbar isLoggedIn={loggedIn} logOut={logOutUser} />
+				<Taskbar
+					isLoggedIn={loggedIn}
+					verified={verified}
+					logOut={logOutUser}
+				/>
 				{loggedIn ? (
 					verified ? (
 						<Switch location={location}>
@@ -82,7 +86,7 @@ const App = ({ location, classes }) => {
 							<Route exact path="/people/:id">
 								<People accessToken={accessToken} />
 							</Route>
-							<Redirect from="/login" to="/" />
+							<Redirect exact from="/login" to="/" />
 							<Route render={() => <div>Not found</div>} />
 						</Switch>
 					) : (
@@ -92,7 +96,7 @@ const App = ({ location, classes }) => {
 								path="/verify"
 								component={VerifyEmail}
 							/>
-							<Redirect from="/login" to="/verify" />
+							<Redirect exact from="/login" to="/verify" />
 						</Switch>
 					)
 				) : (
