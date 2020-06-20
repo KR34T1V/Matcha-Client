@@ -21,6 +21,7 @@ import VerifyEmail from '../VerifyEmail';
 
 const App = ({ location, classes }) => {
 	const [loggedIn, setLoggedIn] = useState(false);
+	const [verified, setVerified] = useState(false);
 	const [accessToken, setAccessToken] = useState('');
 	const [errors, setErrors] = useState([]);
 
@@ -44,38 +45,60 @@ const App = ({ location, classes }) => {
 		} else if (data.data != null && data.data.AccessToken != null) {
 			setAccessToken(data.data.AccessToken);
 			setLoggedIn(true);
+			setVerified(data.data.Verified);
 		} else {
 			setErrors(['Network Error']);
 		}
 	};
 
+	const logOutUser = async () => {
+		await fetch(
+			`http://localhost:3030/logout?AccessToken=${accessToken}`,
+		);
+		setLoggedIn(false);
+		setAccessToken('');
+		setErrors([]);
+	};
+
 	return (
 		<Router>
 			<div className={classes.content}>
-				<Taskbar isLoggedIn={loggedIn} />
+				<Taskbar isLoggedIn={loggedIn} logOut={logOutUser} />
 				{loggedIn ? (
-					<Switch location={location}>
-						<Route exact path="/">
-							<Home accessToken={accessToken} />
-						</Route>
-						<Route exact path="/profile">
-							<Profile accessToken={accessToken} />
-						</Route>
-						<Route exact path="/viewed">
-							<Viewed accessToken={accessToken} />
-						</Route>
-						<Route exact path="/liked">
-							<Liked accessToken={accessToken} />
-						</Route>
-						<Route exact path="/people/:id">
-							<People accessToken={accessToken} />
-						</Route>
-						<Redirect from="/login" to="/" />
-						<Route render={() => <div>Not found</div>} />
-					</Switch>
+					verified ? (
+						<Switch location={location}>
+							<Route exact path="/">
+								<Home accessToken={accessToken} />
+							</Route>
+							<Route exact path="/profile">
+								<Profile accessToken={accessToken} />
+							</Route>
+							<Route exact path="/viewed">
+								<Viewed accessToken={accessToken} />
+							</Route>
+							<Route exact path="/liked">
+								<Liked accessToken={accessToken} />
+							</Route>
+							<Route exact path="/people/:id">
+								<People accessToken={accessToken} />
+							</Route>
+							<Redirect from="/login" to="/" />
+							<Route render={() => <div>Not found</div>} />
+						</Switch>
+					) : (
+						<Switch location={location}>
+							<Route
+								exact
+								path="/verify"
+								component={VerifyEmail}
+							/>
+							<Redirect from="/login" to="/verify" />
+						</Switch>
+					)
 				) : (
 					<Switch location={location}>
 						<Redirect exact from="/" to="/login" />
+						<Redirect exact from="/verify" to="/login" />
 						<Route path="/login">
 							<Login
 								logIn={logInUser}
@@ -84,8 +107,11 @@ const App = ({ location, classes }) => {
 							/>
 						</Route>
 						<Route path="/signup" component={Signup} />
-						<Route exact path="/passwordReset" component={PasswordReset}/>
-						<Route exact path="/verifyEmail" component={VerifyEmail}/>
+						<Route
+							exact
+							path="/passwordReset"
+							component={PasswordReset}
+						/>
 						<Route render={() => <div>Not found</div>} />
 					</Switch>
 				)}

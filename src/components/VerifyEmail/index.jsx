@@ -10,7 +10,7 @@ const PasswordReset = ({ classes }) => {
 	const [Email, setEmail] = useState('');
 	const [VerifyKey, setKey] = useState('');
 
-	const handleSubmit = async (e)=> {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const raw = await fetch('http://localhost:3030/user/passwordReset', {
 			method: 'post',
@@ -31,29 +31,32 @@ const PasswordReset = ({ classes }) => {
 	};
 
 	const resendEmail = async () => {
-		const raw = await fetch ('http://localhost:3030/user/verifyEmail/email', {
-			method: 'post',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
+		const raw = await fetch(
+			'http://localhost:3030/user/verifyEmail/email',
+			{
+				method: 'post',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					Email: Email,
+				}),
 			},
-			body: JSON.stringify({
-				Email: Email,
-			}),
-		});
+		);
 
 		const data = await raw.json;
 		if (data.error != null) {
 			console.log(data.error);
 		}
-	}
+	};
 
 	return (
 		<Grid
-		container
-		justify="center"
-		direction="column"
-		className={classes.content}
+			container
+			justify="center"
+			direction="column"
+			className={classes.content}
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Grid container justify="center">
@@ -67,34 +70,34 @@ const PasswordReset = ({ classes }) => {
 						</Typography>
 					</Grid>
 
-					<Grid item style={{width: '100%'}}>
-						<form onSubmit={(e)=> handleSubmit(e)}>
+					<Grid item style={{ width: '100%' }}>
+						<form onSubmit={(e) => handleSubmit(e)}>
 							<TextField
 								required
 								label="Email"
 								type="input"
 								color="primary"
-								onChange={(e)=> setEmail(e.target.value)}
+								onChange={(e) => setEmail(e.target.value)}
 							/>
 							<TextField
 								label="Security Key"
 								type="input"
 								color="primary"
-								onChange={(e)=> setKey(e.target.value)}
+								onChange={(e) => setKey(e.target.value)}
 							/>
 							<Button
-								fullWidth 
-								type="submit" 
+								fullWidth
+								type="submit"
 								variant="contained"
 								className={classes.button}
 							>
 								Verify
 							</Button>
 							<Button
-								fullWidth 
+								fullWidth
 								variant="contained"
 								className={classes.button}
-								onClick={()=> resendEmail()}
+								onClick={() => resendEmail()}
 							>
 								Resend Email
 							</Button>
@@ -104,7 +107,7 @@ const PasswordReset = ({ classes }) => {
 			</Paper>
 		</Grid>
 	);
-}
+};
 
 const styles = (theme) => ({
 	content: {
@@ -125,7 +128,7 @@ const styles = (theme) => ({
 		color: theme.palette.secondary.main,
 		backgroundColor: theme.palette.primary.main,
 		marginTop: theme.spacing(2),
- 	},
+	},
 	item: {
 		width: '90%',
 	},

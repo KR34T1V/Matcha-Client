@@ -11,7 +11,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import { NavLink } from 'react-router-dom';
 
-const Taskbar = ({ isLoggedIn, classes }) => {
+const Taskbar = ({ isLoggedIn, classes, logOut }) => {
 	return isLoggedIn ? (
 		<AppBar position="sticky" elevation={0} className={classes.ruler}>
 			<Toolbar variant="dense">
@@ -26,14 +26,14 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item className={classes.title}>
-								<NavLink to="/" className={classes.link}>
-									<Typography
-										variant="h6"
-										color="secondary"
-									>
-										Log Out
-									</Typography>
-								</NavLink>
+								<Typography
+									variant="h6"
+									color="secondary"
+									onClick={logOut}
+									style={{ cursor: 'pointer' }}
+								>
+									Log Out
+								</Typography>
 							</Grid>
 							<Grid item>
 								<NavLink to="/profile">
@@ -72,7 +72,10 @@ const Taskbar = ({ isLoggedIn, classes }) => {
 							</Grid>
 
 							<Grid item>
-								<NavLink to="/signup" className={classes.link}>
+								<NavLink
+									to="/signup"
+									className={classes.link}
+								>
 									<Typography
 										variant="h6"
 										color="secondary"
