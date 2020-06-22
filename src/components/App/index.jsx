@@ -91,10 +91,9 @@ const App = ({ location, classes }) => {
 						</Switch>
 					) : (
 						<Switch location={location}>
-							<Route
-								exact
-								path="/verify"
-								component={VerifyEmail}
+							<Route exact path="/verify"/>
+							<VerifyEmail
+								verifyUser={setVerified}
 							/>
 							<Redirect exact from="/login" to="/verify" />
 						</Switch>

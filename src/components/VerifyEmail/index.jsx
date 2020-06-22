@@ -6,13 +6,13 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, TextField } from '@material-ui/core';
 
-const PasswordReset = ({ classes }) => {
+const VerifyEmail = ({ classes, verifyUser}) => {
 	const [Email, setEmail] = useState('');
 	const [VerifyKey, setKey] = useState('');
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const raw = await fetch('http://localhost:3030/user/passwordReset', {
+		const raw = await fetch('http://localhost:3030/user/verifyEmail', {
 			method: 'post',
 			headers: {
 				Accept: 'application/json',
@@ -25,9 +25,13 @@ const PasswordReset = ({ classes }) => {
 		});
 
 		const data = await raw.json();
-		if (data.error != null) {
-			console.log(data.error);
+		if (data.errors != null) {
+			console.log(data.errors);
+			if (data.result === "Success"){
+				verifyUser(1);
+			}
 		}
+		
 	};
 
 	const resendEmail = async () => {
@@ -71,6 +75,14 @@ const PasswordReset = ({ classes }) => {
 					</Grid>
 
 					<Grid item style={{ width: '100%' }}>
+						<Typography
+							variant="subtitle2"
+							align="center"
+							color="primary"
+						>
+						It looks like you have not verified your email address.
+						Please take a moment to do so.
+						</Typography>
 						<form onSubmit={(e) => handleSubmit(e)}>
 							<TextField
 								required
@@ -138,4 +150,4 @@ const styles = (theme) => ({
 	},
 });
 
-export default withStyles(styles)(PasswordReset);
+export default withStyles(styles)(VerifyEmail);
