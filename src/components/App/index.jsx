@@ -41,7 +41,7 @@ const App = ({ location, classes }) => {
 		const data = await raw.json();
 
 		if (data.errors != null) {
-			setErrors(data.error);
+			setErrors(data.errors);
 		} else if (data.data != null && data.data.AccessToken != null) {
 			setAccessToken(data.data.AccessToken);
 			setLoggedIn(true);
