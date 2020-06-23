@@ -17,7 +17,7 @@ const Register = ({ classes }) => {
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
 	const [email, setEmail] = useState('');
-	const [dob, setBirthdate ]= useState('');
+	const [dob, setBirthdate] = useState('');
 	const [pwd, setPwd] = useState('');
 	const [cpwd, setCPwd] = useState('');
 	const [gender, setGender] = useState('Female');
@@ -33,27 +33,26 @@ const Register = ({ classes }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch("http://localhost:3030/register", {
-				method: "post",
-				headers: {
-				  'Accept': 'application/json',
-				  'Content-Type': 'application/json'
-				},
-			  
-				//make sure to serialize your JSON body
-				body: JSON.stringify({
-					Username: username,
-					Firstname: first,
-					Lastname: last,
-					Birthdate: dob,
-					Email: email,
-					Password: pwd,
-					RePassword: cpwd,
-					Gender: gender,
-					SexualPreference: preference
-				})
-			})
-			.then( (response) => { 
+		fetch('http://localhost:3030/register', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+
+			//make sure to serialize your JSON body
+			body: JSON.stringify({
+				Username: username,
+				Firstname: first,
+				Lastname: last,
+				Birthdate: dob,
+				Email: email,
+				Password: pwd,
+				RePassword: cpwd,
+				Gender: gender,
+				SexualPreference: preference,
+			}),
+		}).then((response) => {
 			console.log(response);
 			//do something awesome that makes the world a better place
 		});

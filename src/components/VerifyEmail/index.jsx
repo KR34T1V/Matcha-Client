@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, TextField } from '@material-ui/core';
 
-const VerifyEmail = ({ classes, verifyUser}) => {
+const VerifyEmail = ({ classes, verifyUser }) => {
 	const [Email, setEmail] = useState('');
 	const [VerifyKey, setKey] = useState('');
 
@@ -19,19 +19,18 @@ const VerifyEmail = ({ classes, verifyUser}) => {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				Email: Email,
-				VerifyKey: VerifyKey,
+				Email,
+				VerifyKey,
 			}),
 		});
 
 		const data = await raw.json();
-		if (data.errors != null) {
-			console.log(data.errors);
-			if (data.result === "Success"){
-				verifyUser(1);
-			}
+		if (data.data.errors != null) {
+			console.log(data.data.errors);
 		}
-		
+		if (data.data.result === 'Success') {
+			verifyUser(true);
+		}
 	};
 
 	const resendEmail = async () => {
@@ -44,7 +43,7 @@ const VerifyEmail = ({ classes, verifyUser}) => {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					Email: Email,
+					Email,
 				}),
 			},
 		);
@@ -63,7 +62,7 @@ const VerifyEmail = ({ classes, verifyUser}) => {
 			className={classes.content}
 		>
 			<Paper elevation={4} className={classes.paper}>
-				<Grid container justify="center">
+				<Grid container justify="center" spacing={2}>
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
@@ -74,15 +73,18 @@ const VerifyEmail = ({ classes, verifyUser}) => {
 						</Typography>
 					</Grid>
 
-					<Grid item style={{ width: '100%' }}>
+					<Grid item style={{ with: '100%' }}>
 						<Typography
-							variant="subtitle2"
+							variant="body2"
 							align="center"
 							color="primary"
 						>
-						It looks like you have not verified your email address.
-						Please take a moment to do so.
+							It looks like you have not verified your email
+							address. Please take a moment to do so.
 						</Typography>
+					</Grid>
+
+					<Grid item style={{ width: '100%' }}>
 						<form onSubmit={(e) => handleSubmit(e)}>
 							<TextField
 								required
