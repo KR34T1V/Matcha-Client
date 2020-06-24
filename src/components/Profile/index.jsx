@@ -26,6 +26,12 @@ const Profile = ({ classes, accessToken }) => {
 	const [myTags, setMyTags] = useState([]);
 	const [allTags, setAllTags] = useState([]);
 
+	const [pwd, setPwd] = useState('');
+	const [npwd, setNPwd] = useState('');
+	const [repwd, setRePwd] = useState('');
+
+
+
 	useEffect(() => {
 		const getCurrentUser = async () => {
 			const raw = await fetch(
@@ -98,6 +104,8 @@ const Profile = ({ classes, accessToken }) => {
 									justify="center"
 									style={{ marginTop: '12px' }}
 								>
+								{console.log(avatar)}
+								{avatar !== '' ? (
 									<img
 										src={avatar}
 										alt="avatar"
@@ -106,6 +114,14 @@ const Profile = ({ classes, accessToken }) => {
 											marginBottom: '16px',
 										}}
 									/>
+								): (null)}
+									<Typography
+										variant="subtitle2"
+										align="center"
+										color="primary"
+									>
+										This is where the avatar upload is meant to be
+									</Typography>
 								</Grid>
 							</Grid>
 
@@ -120,6 +136,13 @@ const Profile = ({ classes, accessToken }) => {
 										/>
 									))}
 								</Grid>
+								<Typography
+									variant="subtitle2"
+									align="center"
+									color="primary"
+								>
+									This is where the other image upload is meant to be 
+								</Typography>
 							</Grid>
 
 							<Grid item className={classes.item}>
@@ -275,17 +298,41 @@ const Profile = ({ classes, accessToken }) => {
 									>
 										Save Changes
 									</Button>
-
-									<NavLink to="/reset">
-										<Button
-											fullWidth
-											type="submit"
-											variant="contained"
-											className={classes.button}
-										>
-											Change your password?
-										</Button>
-									</NavLink>
+									<TextField
+										fullWidth
+										label="Current Password"
+										type="password"
+										color="primary"
+										onChange={(e) =>
+											setPwd(e.target.value)
+										}
+									/>
+									<TextField
+										fullWidth
+										label="New Password"
+										type="password"
+										color="primary"
+										onChange={(e) =>
+											setNPwd(e.target.value)
+										}
+									/>
+									<TextField
+										fullWidth
+										label="Repeat New Password"
+										type="password"
+										color="primary"
+										onChange={(e) =>
+											setRePwd(e.target.value)
+										}
+									/>
+									<Button
+										fullWidth
+										type="submit"
+										variant="contained"
+										className={classes.button}
+									>
+										Change your password
+									</Button>
 
 									<NavLink to={`/viewed`}>
 										<Button

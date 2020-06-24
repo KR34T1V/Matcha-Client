@@ -116,7 +116,7 @@ const PasswordReset = ({ classes, history }) => {
 								className={classes.button}
 								onClick={() => resendEmail()}
 							>
-								Resend Email
+								Send Email
 							</Button>
 						</form>
 					</Grid>

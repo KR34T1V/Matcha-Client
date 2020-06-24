@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
@@ -29,50 +30,74 @@ const Viewed = ({ classes, accessToken }) => {
 			className={classes.content}
 		>
 			<Paper elevation={4} className={classes.paper}>
-				<Typography variant="h4" align="center" color="primary">
-					Viewers
-				</Typography>
+					<Typography variant="h4" align="center" color="primary">
+						Viewers
+					</Typography>
 				{viewers === '' ? (
 					<CircularProgress variant="indeterminate" />
 				) : viewers.length > 0 ? (
-					viewers.map((viewer) => {
-						return (
-							<NavLink
-								to={`/people/${viewer.Id}`}
-								className={classes.link}
-							>
-								<Grid
-									container
-									key={viewer.Id}
-									direction="column"
-									className={classes.item}
+					<Grid>
+						{viewers.map((viewer) => {
+							return (
+								<NavLink
+									to={`/people/${viewer.Id}`}
+									className={classes.link}
 								>
-									<Grid item>
-										<Typography
-											variant="h6"
-											color="primary"
-											align="center"
-										>
-											{viewer.Username}
-										</Typography>
+									<Grid
+										container
+										key={viewer.Id}
+										direction="column"
+										className={classes.item}
+									>
+										<Grid item>
+											<Typography
+												variant="h6"
+												color="primary"
+												align="center"
+											>
+												{viewer.Username}
+											</Typography>
+										</Grid>
+										<Grid item>
+											<Typography
+												variant="body1"
+												color="primary"
+												align="center"
+											>
+												Fame Rating: {viewer.Fame}
+											</Typography>
+										</Grid>
 									</Grid>
-									<Grid item>
-										<Typography
-											variant="body1"
-											color="primary"
-											align="center"
-										>
-											Fame Rating: {viewer.Fame}
-										</Typography>
-									</Grid>
-								</Grid>
-							</NavLink>
-						);
-					})
+								</NavLink>
+							);
+						})}
+						<NavLink to="/profile">
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+							>
+								Back
+							</Button>
+						</NavLink>
+					</Grid>
 				) : (
-					<Typography variant="h5" align="center" color="primary">
-						No Viewers yet...
-					</Typography>
+					<Grid>
+						<Typography variant="h5" align="center" color="primary">
+							No Viewers yet...
+						</Typography>
+						<NavLink to="/profile">
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+							>
+								Back
+							</Button>
+						</NavLink>
+					</Grid>
 				)}
 			</Paper>
 		</Grid>
@@ -93,6 +118,12 @@ const styles = (theme) => ({
 			width: '90%',
 			marginLeft: '0',
 		},
+	},
+	button: {
+		color: theme.palette.secondary.main,
+		backgroundColor: theme.palette.primary.main,
+		marginTop: theme.spacing(2),
+		marginBottom: theme.spacing(2),
 	},
 	item: {
 		marginTop: theme.spacing(2),

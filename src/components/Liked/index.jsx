@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const Liked = ({ classes, accessToken }) => {
 	const [likers, setLikers] = useState('');
@@ -35,44 +36,68 @@ const Liked = ({ classes, accessToken }) => {
 				{likers === '' ? (
 					<CircularProgress variant="indeterminate" />
 				) : likers.length > 0 ? (
-					likers.map((liker) => {
-						return (
-							<NavLink
-								to={`/people/${liker.Id}`}
-								className={classes.link}
-							>
-								<Grid
-									container
-									key={liker.Id}
-									direction="column"
-									className={classes.item}
+					<Grid>
+						{likers.map((liker) => {
+							return (
+								<NavLink
+									to={`/people/${liker.Id}`}
+									className={classes.link}
 								>
-									<Grid item>
-										<Typography
-											variant="h6"
-											color="primary"
-											align="center"
-										>
-											{liker.Username}
-										</Typography>
+									<Grid
+										container
+										key={liker.Id}
+										direction="column"
+										className={classes.item}
+									>
+										<Grid item>
+											<Typography
+												variant="h6"
+												color="primary"
+												align="center"
+											>
+												{liker.Username}
+											</Typography>
+										</Grid>
+										<Grid item>
+											<Typography
+												variant="body1"
+												color="primary"
+												align="center"
+											>
+												Fame Rating: {liker.Fame}
+											</Typography>
+										</Grid>
 									</Grid>
-									<Grid item>
-										<Typography
-											variant="body1"
-											color="primary"
-											align="center"
-										>
-											Fame Rating: {liker.Fame}
-										</Typography>
-									</Grid>
-								</Grid>
+								</NavLink>
+							);
+						})}
+						<NavLink to="/profile">
+								<Button
+									fullWidth
+									type="submit"
+									variant="contained"
+									className={classes.button}
+								>
+									Back
+								</Button>
 							</NavLink>
-						);
-					})
+					</Grid>
 				) : (
-					<Typography variant="h5" align="center" color="primary">
-						No Likers yet...
-					</Typography>
+					<Grid>
+						<Typography variant="h5" align="center" color="primary">
+							No Likers yet...
+						</Typography>
+						<NavLink to="/profile">
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+							>
+								Back
+							</Button>
+						</NavLink>
+					</Grid>
 				)}
 			</Paper>
 		</Grid>
@@ -93,6 +118,12 @@ const styles = (theme) => ({
 			width: '90%',
 			marginLeft: '0',
 		},
+	},
+	button: {
+		color: theme.palette.secondary.main,
+		backgroundColor: theme.palette.primary.main,
+		marginTop: theme.spacing(2),
+		marginBottom: theme.spacing(2),
 	},
 	item: {
 		marginTop: theme.spacing(2),
