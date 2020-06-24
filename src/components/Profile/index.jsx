@@ -30,6 +30,31 @@ const Profile = ({ classes, accessToken }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 
+	const submitPwdChange = async function () {
+		const raw = await fetch('http://localhost:3030/user/passwordChange', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				Password: pwd,
+				NewPassword: npwd,
+				RePassword: repwd,
+			}),
+		});
+		const data = await raw.json();
+
+		if (data.data != null && data.data.result === 'Success'){
+			console.log(data.data.Result);
+		} else if (data.data != null && data.data.errors != null && data.data.errors.length > 0){
+			console.log(data.data.errors)
+		} else {
+			console.log("Network Error");
+		}
+	}
+
 
 
 	useEffect(() => {
@@ -330,6 +355,7 @@ const Profile = ({ classes, accessToken }) => {
 										type="submit"
 										variant="contained"
 										className={classes.button}
+										onClick={() => submitPwdChange()}
 									>
 										Change your password
 									</Button>
