@@ -14,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const Profile = ({ classes, accessToken }) => {
+const Profile = ({ classes, accessToken, setErrors }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -30,6 +30,25 @@ const Profile = ({ classes, accessToken }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 
+	const saveProfile = async function () {
+		const raw = await fetch('http://localhost:3030/user/updateProfile', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				Username: username,
+				Firstname: first,
+				Lastname: last,
+				Gender: gender,
+				SexualPreference: preference,
+			}),
+		});
+		const data = await raw.json();
+		console.log(data);
+	}
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
 			method: 'post',
@@ -320,6 +339,7 @@ const Profile = ({ classes, accessToken }) => {
 										type="submit"
 										variant="contained"
 										className={classes.button}
+										onClick={() => saveProfile()}
 									>
 										Save Changes
 									</Button>

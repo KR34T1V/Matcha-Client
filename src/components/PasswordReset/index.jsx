@@ -108,7 +108,7 @@ const PasswordReset = ({ classes, history }) => {
 								variant="contained"
 								className={classes.button}
 							>
-								Verify
+								Reset
 							</Button>
 							<Button
 								fullWidth

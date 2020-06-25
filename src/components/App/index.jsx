@@ -39,9 +39,8 @@ const App = ({ location, classes }) => {
 		});
 
 		const data = await raw.json();
-		setErrors([]);
-		if (data.errors != null) {
-			setErrors(data.errors);
+		if (data.data.errors != null) {
+			setErrors(data.data.errors);
 		} else if (data.data != null && data.data.AccessToken != null) {
 			setAccessToken(data.data.AccessToken);
 			setLoggedIn(true);
@@ -75,7 +74,10 @@ const App = ({ location, classes }) => {
 								<Home accessToken={accessToken} />
 							</Route>
 							<Route exact path="/profile">
-								<Profile accessToken={accessToken} />
+								<Profile
+									accessToken={accessToken}
+									setErrors={setErrors}
+								/>
 							</Route>
 							<Route exact path="/viewed">
 								<Viewed accessToken={accessToken} />
