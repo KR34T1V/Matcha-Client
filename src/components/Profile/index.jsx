@@ -30,6 +30,23 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 
+	const uploadAvatar = async function (val){
+		console.log(val);
+		const raw = await fetch('http://localhost:3030/user/updateProfile/avatar', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				Avatar: val,
+			}),
+		});
+		const data = await raw.json();
+		console.log(data);
+	}
+
 	const saveProfile = async function () {
 		const raw = await fetch('http://localhost:3030/user/updateProfile', {
 			method: 'post',
@@ -39,6 +56,7 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 			},
 			body: JSON.stringify({
 				AccessToken: accessToken,
+				Avatar: avatar,
 				Username: username,
 				Firstname: first,
 				Lastname: last,
@@ -148,7 +166,6 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 									justify="center"
 									style={{ marginTop: '12px' }}
 								>
-								{console.log(avatar)}
 								{avatar !== '' ? (
 									<img
 										src={avatar}
@@ -159,6 +176,10 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 										}}
 									/>
 								): (null)}
+								<input type="file" name="avatar" onChange={(e)=>{
+									uploadAvatar(e.target.files[0]);
+									}
+								}/>
 									<Typography
 										variant="subtitle2"
 										align="center"

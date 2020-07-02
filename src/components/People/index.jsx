@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import moment from 'moment';
 
 // MaterialUI
@@ -12,44 +12,42 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/ReportOutlined';
 
-const People = ({ classes, accessToken }) => {
-	const tempProfile = {
-		username: 'username',
-		first: 'Insecure',
-		last: 'Band',
-		gender: 'Male',
-		preference: 'Bisexual',
-		age: moment('2012-05-14T22:00:00.000Z').year(),
-		bio:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-		tags: ['Bicycle', 'Dare', 'Independent', 'Western', 'Literature'],
-		geo:
-			'{"Latitude":-29,"Longitude":28,"Timestamp":"2020/06/06, 16:59:06"}', // don't need this for pass grade...
-		fame: '110',
-		mainImg: 'https://picsum.photos/400/250?random=3185',
-		otherImg: [
-			'https://picsum.photos/400/250?random=5320',
-			'https://picsum.photos/400/250?random=38',
-			'https://picsum.photos/400/250?random=4007',
-			'https://picsum.photos/400/250?random=6555',
-			'https://picsum.photos/400/250?random=1546',
-			'https://picsum.photos/400/250?random=9175',
-		],
-		lastOnline: moment('2020/05/06 16:44:22').fromNow(),
-	};
+const People = ({ classes, accessToken, errors, setErrors }) => {
+	const [userProfile, setProfile] = useState({});
+	//Do errors
+	const {id: personId} = useParams()
 
 	useEffect(() => {
 		const getProfiles = async () => {
 			const raw = await fetch(
-				`http://localhost:3030/view/profile?AccessToken=${accessToken}`,
+				`http://localhost:3030/view/profile?AccessToken=${accessToken}&ProfileId=${personId}`,
 			);
 			const data = await raw.json();
-			if (data.data != null && data.data.length > 0) {
-			}
-		};
+			if (data.data != null) {
+				let user = data.data;
+				console.log(user.Interests);
+				let profile = {};
+				if (data.data.errors != null) {
+					setErrors(data.data.errors);
+				}
+				profile.Username = user.Username;
+				profile.Firstname = user.Firstname;
+				profile.Lastname = user.Lastname;
+				profile.Gender = user.Gender;
+				profile.Sexuality = user.SexualPreference;
+				profile.Age = user.Age;
+				profile.Biography = user.Biography;
+				profile.Interests = user.Interests;
+				profile.Fame = user.Fame;
+				profile.Avatar = user.Avatar;
+				profile.Images = user.Images;
+				profile.LastOnline = moment(user.AccessTime).fromNow();
+				setProfile(profile);
+			};
+		}
 		getProfiles();
-	}, [accessToken]);
-
+	}, [accessToken, personId, setErrors]);
+	
 	return (
 		<Grid
 			container
@@ -59,92 +57,56 @@ const People = ({ classes, accessToken }) => {
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Grid container justify="center" spacing={4}>
+					{errors.map((msg) => (
+						<Grid item>
+							<Typography
+								key={msg}
+								variant="body1"
+								color="primary"
+							>
+								{msg}
+							</Typography>
+						</Grid>
+					))}
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
 							align="center"
 							color="primary"
 						>
-							{tempProfile.username}
+							{userProfile.Username}
 						</Typography>
 					</Grid>
 
 					<Typography variant="h6" align="center" color="primary">
-						Last online: {tempProfile.lastOnline}
+						Last online: {userProfile.LastOnline}
 					</Typography>
-
+					{userProfile.Avatar != null ? 
 					<Grid item className={classes.item}>
 						<Grid container justify="center">
 							<img
-								src={tempProfile.mainImg}
+								src={userProfile.Avatar}
 								alt="profile"
 								style={{ borderRadius: '10px' }}
 							/>
 						</Grid>
 					</Grid>
-
-					<Grid item className={classes.item}>
-						<Grid container justify="space-evenly">
-							{tempProfile.otherImg.map((img) => (
-								<img
-									src={img}
-									alt="profile"
-									className={classes.otherImg}
-									style={{ borderRadius: '10px' }}
-								/>
-							))}
-						</Grid>
-					</Grid>
-
-					<Grid item className={classes.item}>
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							Fame: {tempProfile.fame}
-						</Typography>
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							{tempProfile.first} {tempProfile.last}
-						</Typography>
-
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							Gender: {tempProfile.gender}
-						</Typography>
-
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							Sexual Orientation: {tempProfile.preference}
-						</Typography>
-
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							Date of Birth: {tempProfile.age}
-						</Typography>
-					</Grid>
-					<Grid item className={classes.item}>
-						<Typography
-							variant="h5"
-							align="center"
-							color="primary"
-						>
-							{tempProfile.bio}
-						</Typography>
-					</Grid>
+					: (null)
+					}
+					{userProfile.Images != null && userProfile.Images.length > 0 ?
+						<Grid item className={classes.item}>
+							<Grid container justify="space-evenly">
+								{userProfile.Images.map((file) => (
+									<img
+										src={file}
+										alt="profile"
+										className={classes.otherImg}
+										style={{ borderRadius: '10px' }}
+									/>
+								))}
+							</Grid>
+						</Grid> : (null)
+					}
 
 					<Grid item className={classes.item}>
 						<Typography
@@ -152,18 +114,69 @@ const People = ({ classes, accessToken }) => {
 							align="center"
 							color="primary"
 						>
-							Likes
+							Fame: {userProfile.Fame}%
 						</Typography>
-						<Grid container justify="space-evenly">
-							{tempProfile.tags.map((tag) => (
-								<Grid item>
-									<Typography variant="h6" color="primary">
-										{tag}
-									</Typography>
-								</Grid>
-							))}
-						</Grid>
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
+							{userProfile.Firstname} {userProfile.Lastname}
+						</Typography>
+
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
+							Gender: {userProfile.Gender}
+						</Typography>
+
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
+							Sexuality: {userProfile.Sexuality}
+						</Typography>
+
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
+							Age: {userProfile.Age}
+						</Typography>
 					</Grid>
+					<Grid item className={classes.item}>
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
+							{userProfile.Biography}
+						</Typography>
+					</Grid>
+					{userProfile.Interests != null && userProfile.Interests.length > 0 ?
+						<Grid item className={classes.item}>
+							<Typography
+								variant="h5"
+								align="center"
+								color="primary"
+							>
+								Interests:
+							</Typography>
+							<Grid container justify="space-evenly">
+								{userProfile.Interests.map((tag) => (
+									<Grid item>
+										<Typography variant="h6" color="primary">
+											{tag}
+										</Typography>
+									</Grid>
+								))}
+							</Grid>
+						</Grid> : (null)
+					}
 
 					<Grid item className={classes.item}>
 						<Button
@@ -212,7 +225,7 @@ const People = ({ classes, accessToken }) => {
 								variant="contained"
 								className={classes.button}
 							>
-								Back To Home
+								Back to Home
 							</Button>
 						</NavLink>
 					</Grid>

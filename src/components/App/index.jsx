@@ -86,7 +86,11 @@ const App = ({ location, classes }) => {
 								<Liked accessToken={accessToken} />
 							</Route>
 							<Route exact path="/people/:id">
-								<People accessToken={accessToken} />
+								<People 
+									accessToken={accessToken}
+									errors={errors}
+									setErrors={setErrors}
+								/>
 							</Route>
 							<Redirect exact from="/login" to="/" />
 							<Route render={() => <div>Not found</div>} />
