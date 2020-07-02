@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 
-const Home = ({ classes, accessToken }) => {
+const Home = ({ classes, accessToken, setErrors, errors}) => {
 	const [profiles, setProfiles] = useState([]);
 
 	useEffect(() => {
@@ -17,13 +17,15 @@ const Home = ({ classes, accessToken }) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
+			if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+				setErrors(errors);
 			if (data.data != null && data.data.length > 0) {
 				setProfiles(data.data);
 			}
 		};
 
 		getProfiles();
-	}, [accessToken]);
+	}, [accessToken, setErrors, errors]);
 
 	return (
 		<>
@@ -45,6 +47,17 @@ const Home = ({ classes, accessToken }) => {
 						className={classes.content}
 						key={Id}
 					>
+						{errors.map((msg) => (
+							<Grid item>
+								<Typography
+									key={msg}
+									variant="body1"
+									color="primary"
+								>
+									{msg}
+								</Typography>
+							</Grid>
+						))}
 						<Paper elevation={4} className={classes.paper}>
 							<Grid container justify="center" spacing={2}>
 								<Grid item className={classes.item}>
@@ -116,13 +129,6 @@ const Home = ({ classes, accessToken }) => {
 											View Profile
 										</Button>
 									</NavLink>
-									<Button
-										fullWidth
-										variant="contained"
-										className={classes.button}
-									>
-										Yes please!
-									</Button>
 								</Grid>
 							</Grid>
 						</Paper>

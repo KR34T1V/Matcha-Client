@@ -23,8 +23,8 @@ const App = ({ location, classes }) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [verified, setVerified] = useState(false);
 	const [accessToken, setAccessToken] = useState('');
+	
 	const [errors, setErrors] = useState([]);
-
 	const logInUser = async (email, pwd) => {
 		const raw = await fetch('http://localhost:3030/login', {
 			method: 'post',
@@ -71,7 +71,11 @@ const App = ({ location, classes }) => {
 					verified ? (
 						<Switch location={location}>
 							<Route exact path="/">
-								<Home accessToken={accessToken} />
+								<Home 
+									accessToken={accessToken} 
+									errors={errors}
+									setErrors={setErrors}
+								/>
 							</Route>
 							<Route exact path="/profile">
 								<Profile
