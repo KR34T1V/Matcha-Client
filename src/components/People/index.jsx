@@ -8,15 +8,60 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import BlockIcon from '@material-ui/icons/Block';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 import ReportIcon from '@material-ui/icons/ReportOutlined';
 
 const People = ({ classes, accessToken, errors, setErrors }) => {
 	const [userProfile, setProfile] = useState({});
-	//Do errors
+	const [Liked, setLiked] = useState(false);
+	const [Blocked, setBlocked] = useState(false);
 	const {id: personId} = useParams()
+	
+	const likeUser = async ()=>{
+		const raw = await fetch('http://localhost:3030/user/like', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				profileId: personId
+			}),
+		});
+		const data = await raw.json();
+		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+			setErrors(data.data.errors);
+		if (data.data != null && data.data.res === 'Success'){
+			data.data.msg === 'Liked User' ? setLiked(true) : setLiked(false)
+		}
+	}
 
+	const blockUser = async (report)=>{
+		if (report === 1 && Blocked === true)
+			return(0);
+		const raw = await fetch('http://localhost:3030/user/block', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				profileId: personId
+			}),
+		});
+		const data = await raw.json();
+		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+			setErrors(data.data.errors);
+			console.log(data.data);
+		if (data.data != null && data.data.res === 'Success'){
+			data.data.msg === 'Blocked User' ? setBlocked(true) : setBlocked(false)
+		}
+	}
 	useEffect(() => {
 		const getProfiles = async () => {
 			const raw = await fetch(
@@ -42,6 +87,8 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 				profile.Avatar = user.Avatar;
 				profile.Images = user.Images;
 				profile.LastOnline = moment(user.AccessTime).fromNow();
+				setLiked(user.Liked);
+				setBlocked(user.Blocked);
 				setProfile(profile);
 			};
 		}
@@ -179,24 +226,43 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 					}
 
 					<Grid item className={classes.item}>
+						{Liked === true ?
 						<Button
 							fullWidth
 							type="submit"
 							variant="contained"
 							className={classes.button}
+							onClick={()=>likeUser()}
 						>
-							<FavoriteBorderIcon
+							<ThumbUpIcon
 								color="secondary"
 								className={classes.buttonText}
 							/>
 							Like
 						</Button>
-
+						:
 						<Button
 							fullWidth
 							type="submit"
 							variant="contained"
 							className={classes.button}
+							onClick={()=>likeUser()}
+
+						>
+							<ThumbDownIcon
+								color="secondary"
+								className={classes.buttonText}
+							/>
+							Dislike
+						</Button>
+						}
+						{Blocked === false ?
+						<Button
+							fullWidth
+							type="submit"
+							variant="contained"
+							className={classes.button}
+							onClick={()=>blockUser()}
 						>
 							<BlockIcon
 								color="secondary"
@@ -204,12 +270,28 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 							/>
 							Block
 						</Button>
+						:
+						<Button
+							fullWidth
+							type="submit"
+							variant="contained"
+							className={classes.button}
+							onClick={()=>blockUser()}
+						>
+							<LockOpenIcon
+								color="secondary"
+								className={classes.buttonText}
+							/>
+							Unblock
+						</Button>
+						}
 
 						<Button
 							fullWidth
 							type="submit"
 							variant="contained"
 							className={classes.button}
+							onClick={()=>blockUser(1)}
 						>
 							<ReportIcon
 								color="secondary"

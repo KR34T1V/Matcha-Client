@@ -76,6 +76,7 @@ const App = ({ location, classes }) => {
 							<Route exact path="/profile">
 								<Profile
 									accessToken={accessToken}
+									errors={errors}
 									setErrors={setErrors}
 								/>
 							</Route>

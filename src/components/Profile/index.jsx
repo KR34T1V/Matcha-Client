@@ -14,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const Profile = ({ classes, accessToken, setErrors }) => {
+const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -82,13 +82,12 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 			}),
 		});
 		const data = await raw.json();
-
+		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+			setErrors(data.data.errors);
 		if (data.data != null && data.data.result === 'Success'){
 			console.log(data.data.Result);
-		} else if (data.data != null && data.data.errors != null && data.data.errors.length > 0){
-			console.log(data.data.errors)
 		} else {
-			console.log("Network Error");
+			setErrors(["Network Error"]);
 		}
 	}
 
@@ -101,6 +100,9 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 			);
 			const data = await raw.json();
 			if (data.data != null){
+				if (data.data.errors != null && data.data.errors.length > 0){
+					setErrors(data.data.errors);
+				}
 				const profile = data.data;
 				setUsername(profile.Username);
 				setFirst(profile.Firstname);
@@ -148,6 +150,17 @@ const Profile = ({ classes, accessToken, setErrors }) => {
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Grid container justify="center" spacing={4}>
+					{errors.map((msg) => (
+						<Grid item>
+							<Typography
+								key={msg}
+								variant="body1"
+								color="primary"
+							>
+								{msg}
+							</Typography>
+						</Grid>
+					))}
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
