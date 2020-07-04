@@ -57,7 +57,6 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 		const data = await raw.json();
 		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
 			setErrors(data.data.errors);
-			console.log(data.data);
 		if (data.data != null && data.data.res === 'Success'){
 			data.data.msg === 'Blocked User' ? setBlocked(true) : setBlocked(false)
 		}
@@ -70,7 +69,6 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 			const data = await raw.json();
 			if (data.data != null) {
 				let user = data.data;
-				console.log(user.Interests);
 				let profile = {};
 				if (data.data.errors != null) {
 					setErrors(data.data.errors);

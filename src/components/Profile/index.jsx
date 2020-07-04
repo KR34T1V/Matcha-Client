@@ -22,6 +22,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [gender, setGender] = useState('');
 	const [preference, setPreference] = useState('');
 	const [avatar, setAvatar] = useState('');
+	const [avatarPreview, setAvatarPreview] = useState('');
 	const [otherImg, setOtherImg] = useState([]);
 	const [myTags, setMyTags] = useState([]);
 	const [allTags, setAllTags] = useState([]);
@@ -31,20 +32,33 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [repwd, setRePwd] = useState('');
 
 	const uploadAvatar = async function (val){
-		console.log(val);
-		const raw = await fetch('http://localhost:3030/user/updateProfile/avatar', {
-			method: 'post',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				AccessToken: accessToken,
-				Avatar: val,
-			}),
-		});
-		const data = await raw.json();
-		console.log(data);
+		setAvatarPreview(val)
+		let form = new FormData();
+		form.append('AccessToken', accessToken);
+		form.append('Avatar', val);
+
+		var request = new XMLHttpRequest();
+		request.open("POST", 'http://localhost:3030/user/updateProfile/avatar');
+		request.send(form);
+		request.onreadystatechange = function () {
+			if (this.readyState === 4 && this.status === 200){
+				let data = JSON.parse(request.response);
+				if (data != null && data.data.Avatar != null)
+					setAvatar(data.data.Avatar);
+			}
+		}
+		// const raw = await fetch('http://localhost:3030/user/updateProfile/avatar', {
+		// 	method: 'post',
+		// 	headers: {
+		// 		Accept: 'multipart/form-data',
+		// 		'Content-Type': 'multipart/form-data',
+		// 	},
+		// 	body: JSON.stringify({
+		// 		AccessToken: accessToken,
+		// 	}),
+		// });
+		// const data = await raw.json();
+		// console.log(data);
 	}
 
 	const saveProfile = async function () {
@@ -188,7 +202,16 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 											marginBottom: '16px',
 										}}
 									/>
-								): (null)}
+								): (avatarPreview !== '' ? (
+									<img
+										src={URL.createObjectURL(avatarPreview)}
+										alt="avatar"
+										style={{
+											borderRadius: '10px',
+											marginBottom: '16px',
+										}}
+									/>
+								): (null))}
 								<input type="file" name="avatar" onChange={(e)=>{
 									uploadAvatar(e.target.files[0]);
 									}
