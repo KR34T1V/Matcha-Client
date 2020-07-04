@@ -31,11 +31,11 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 
-	const uploadAvatar = async function (val){
-		setAvatarPreview(val)
+	const uploadAvatar = async function (img){
+		setAvatarPreview(img);
 		let form = new FormData();
 		form.append('AccessToken', accessToken);
-		form.append('Avatar', val);
+		form.append('Avatar', img);
 
 		var request = new XMLHttpRequest();
 		request.open("POST", 'http://localhost:3030/user/updateProfile/avatar');
@@ -47,18 +47,25 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 					setAvatar(data.data.Avatar);
 			}
 		}
-		// const raw = await fetch('http://localhost:3030/user/updateProfile/avatar', {
-		// 	method: 'post',
-		// 	headers: {
-		// 		Accept: 'multipart/form-data',
-		// 		'Content-Type': 'multipart/form-data',
-		// 	},
-		// 	body: JSON.stringify({
-		// 		AccessToken: accessToken,
-		// 	}),
-		// });
-		// const data = await raw.json();
-		// console.log(data);
+	}
+
+	const uploadGallery = async function (key, img){
+		setAvatarPreview(img)
+		let form = new FormData();
+		form.append('AccessToken', accessToken);
+		form.append('Key', key);
+		form.append('Image', img);
+
+		var request = new XMLHttpRequest();
+		request.open("POST", 'http://localhost:3030/user/updateProfile/gallery');
+		request.send(form);
+		request.onreadystatechange = function () {
+			if (this.readyState === 4 && this.status === 200){
+				let data = JSON.parse(request.response);
+				if (data != null && data.data.Images != null)
+					setOtherImg(data.data.Images);
+			}
+		}
 	}
 
 	const saveProfile = async function () {
