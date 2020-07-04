@@ -139,7 +139,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 			}
 		};
 		getCurrentUser();
-	}, [accessToken]);
+	}, [accessToken, setErrors]);
 
 	const handleGender = (event) => {
 		setGender(event.target.value);
@@ -235,14 +235,28 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 
 							<Grid item className={classes.item}>
 								<Grid container justify="space-evenly">
-									{otherImg.map((img) => (
-										<img
-											src={img}
-											alt="other"
-											className={classes.otherImg}
-											style={{ borderRadius: '10px' }}
-										/>
+									{otherImg.map((img, key) => (
+										<>
+											<img
+												src={img}
+												alt="other"
+												className={classes.otherImg}
+												style={{ borderRadius: '10px' }}
+											/>
+											<input type="file" name="gallery" onChange={(e)=>{
+												uploadGallery(key, e.target.files[0]);
+											}}/>
+										</>
 									))}
+									{otherImg == null ? (
+										<input type="file" name="gallery" onChange={(e)=>{
+												uploadGallery(0, e.target.files[0]);
+										}}/>
+									) : (otherImg.length < 5 ? (
+										<input type="file" name="gallery" onChange={(e)=>{
+												uploadGallery(otherImg.length, e.target.files[0]);
+										}}/>) : (null))
+									}
 								</Grid>
 								<Typography
 									variant="subtitle2"
