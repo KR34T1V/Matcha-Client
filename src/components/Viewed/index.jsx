@@ -30,9 +30,9 @@ const Viewed = ({ classes, accessToken }) => {
 			className={classes.content}
 		>
 			<Paper elevation={4} className={classes.paper}>
-					<Typography variant="h4" align="center" color="primary">
-						Viewers
-					</Typography>
+				<Typography variant="h4" align="center" color="primary">
+					Viewers
+				</Typography>
 				{viewers === '' ? (
 					<CircularProgress variant="indeterminate" />
 				) : viewers.length > 0 ? (
@@ -84,7 +84,11 @@ const Viewed = ({ classes, accessToken }) => {
 					</Grid>
 				) : (
 					<Grid>
-						<Typography variant="h5" align="center" color="primary">
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
 							No Viewers yet...
 						</Typography>
 						<NavLink to="/profile">

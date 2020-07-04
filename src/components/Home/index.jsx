@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 
-const Home = ({ classes, accessToken, setErrors, errors}) => {
+const Home = ({ classes, accessToken, setErrors, errors }) => {
 	const [profiles, setProfiles] = useState([]);
 
 	useEffect(() => {
@@ -17,7 +17,11 @@ const Home = ({ classes, accessToken, setErrors, errors}) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+			if (
+				data.data != null &&
+				data.data.errors != null &&
+				data.data.errors.length > 0
+			)
 				setErrors(errors);
 			if (data.data != null && data.data.length > 0) {
 				setProfiles(data.data);

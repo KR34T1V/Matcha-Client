@@ -18,9 +18,9 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 	const [userProfile, setProfile] = useState({});
 	const [Liked, setLiked] = useState(false);
 	const [Blocked, setBlocked] = useState(false);
-	const {id: personId} = useParams()
-	
-	const likeUser = async ()=>{
+	const { id: personId } = useParams();
+
+	const likeUser = async () => {
 		const raw = await fetch('http://localhost:3030/user/like', {
 			method: 'post',
 			headers: {
@@ -29,20 +29,23 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 			},
 			body: JSON.stringify({
 				AccessToken: accessToken,
-				profileId: personId
+				profileId: personId,
 			}),
 		});
 		const data = await raw.json();
-		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+		if (
+			data.data != null &&
+			data.data.errors != null &&
+			data.data.errors.length > 0
+		)
 			setErrors(data.data.errors);
-		if (data.data != null && data.data.res === 'Success'){
-			data.data.msg === 'Liked User' ? setLiked(true) : setLiked(false)
+		if (data.data != null && data.data.res === 'Success') {
+			data.data.msg === 'Liked User' ? setLiked(true) : setLiked(false);
 		}
-	}
+	};
 
-	const blockUser = async (report)=>{
-		if (report === 1 && Blocked === true)
-			return(0);
+	const blockUser = async (report) => {
+		if (report === 1 && Blocked === true) return 0;
 		const raw = await fetch('http://localhost:3030/user/block', {
 			method: 'post',
 			headers: {
@@ -51,16 +54,22 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 			},
 			body: JSON.stringify({
 				AccessToken: accessToken,
-				profileId: personId
+				profileId: personId,
 			}),
 		});
 		const data = await raw.json();
-		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+		if (
+			data.data != null &&
+			data.data.errors != null &&
+			data.data.errors.length > 0
+		)
 			setErrors(data.data.errors);
-		if (data.data != null && data.data.res === 'Success'){
-			data.data.msg === 'Blocked User' ? setBlocked(true) : setBlocked(false)
+		if (data.data != null && data.data.res === 'Success') {
+			data.data.msg === 'Blocked User'
+				? setBlocked(true)
+				: setBlocked(false);
 		}
-	}
+	};
 	useEffect(() => {
 		const getProfiles = async () => {
 			const raw = await fetch(
@@ -88,11 +97,11 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 				setLiked(user.Liked);
 				setBlocked(user.Blocked);
 				setProfile(profile);
-			};
-		}
+			}
+		};
 		getProfiles();
 	}, [accessToken, personId, setErrors]);
-	
+
 	return (
 		<Grid
 			container
@@ -126,19 +135,19 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 					<Typography variant="h6" align="center" color="primary">
 						Last online: {userProfile.LastOnline}
 					</Typography>
-					{userProfile.Avatar != null ? 
-					<Grid item className={classes.item}>
-						<Grid container justify="center">
-							<img
-								src={userProfile.Avatar}
-								alt="profile"
-								style={{ borderRadius: '10px' }}
-							/>
+					{userProfile.Avatar != null ? (
+						<Grid item className={classes.item}>
+							<Grid container justify="center">
+								<img
+									src={userProfile.Avatar}
+									alt="profile"
+									style={{ borderRadius: '10px' }}
+								/>
+							</Grid>
 						</Grid>
-					</Grid>
-					: (null)
-					}
-					{userProfile.Images != null && userProfile.Images.length > 0 ?
+					) : null}
+					{userProfile.Images != null &&
+					userProfile.Images.length > 0 ? (
 						<Grid item className={classes.item}>
 							<Grid container justify="space-evenly">
 								{userProfile.Images.map((file) => (
@@ -150,8 +159,8 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 									/>
 								))}
 							</Grid>
-						</Grid> : (null)
-					}
+						</Grid>
+					) : null}
 
 					<Grid item className={classes.item}>
 						<Typography
@@ -202,7 +211,8 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 							{userProfile.Biography}
 						</Typography>
 					</Grid>
-					{userProfile.Interests != null && userProfile.Interests.length > 0 ?
+					{userProfile.Interests != null &&
+					userProfile.Interests.length > 0 ? (
 						<Grid item className={classes.item}>
 							<Typography
 								variant="h5"
@@ -214,82 +224,84 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 							<Grid container justify="space-evenly">
 								{userProfile.Interests.map((tag) => (
 									<Grid item>
-										<Typography variant="h6" color="primary">
+										<Typography
+											variant="h6"
+											color="primary"
+										>
 											{tag}
 										</Typography>
 									</Grid>
 								))}
 							</Grid>
-						</Grid> : (null)
-					}
+						</Grid>
+					) : null}
 
 					<Grid item className={classes.item}>
-						{Liked === true ?
-						<Button
-							fullWidth
-							type="submit"
-							variant="contained"
-							className={classes.button}
-							onClick={()=>likeUser()}
-						>
-							<ThumbUpIcon
-								color="secondary"
-								className={classes.buttonText}
-							/>
-							Like
-						</Button>
-						:
-						<Button
-							fullWidth
-							type="submit"
-							variant="contained"
-							className={classes.button}
-							onClick={()=>likeUser()}
+						{Liked === true ? (
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+								onClick={() => likeUser()}
+							>
+								<ThumbUpIcon
+									color="secondary"
+									className={classes.buttonText}
+								/>
+								Like
+							</Button>
+						) : (
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+								onClick={() => likeUser()}
+							>
+								<ThumbDownIcon
+									color="secondary"
+									className={classes.buttonText}
+								/>
+								Dislike
+							</Button>
+						)}
+						{Blocked === false ? (
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+								onClick={() => blockUser()}
+							>
+								<BlockIcon
+									color="secondary"
+									className={classes.buttonText}
+								/>
+								Block
+							</Button>
+						) : (
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+								onClick={() => blockUser()}
+							>
+								<LockOpenIcon
+									color="secondary"
+									className={classes.buttonText}
+								/>
+								Unblock
+							</Button>
+						)}
 
-						>
-							<ThumbDownIcon
-								color="secondary"
-								className={classes.buttonText}
-							/>
-							Dislike
-						</Button>
-						}
-						{Blocked === false ?
 						<Button
 							fullWidth
 							type="submit"
 							variant="contained"
 							className={classes.button}
-							onClick={()=>blockUser()}
-						>
-							<BlockIcon
-								color="secondary"
-								className={classes.buttonText}
-							/>
-							Block
-						</Button>
-						:
-						<Button
-							fullWidth
-							type="submit"
-							variant="contained"
-							className={classes.button}
-							onClick={()=>blockUser()}
-						>
-							<LockOpenIcon
-								color="secondary"
-								className={classes.buttonText}
-							/>
-							Unblock
-						</Button>
-						}
-
-						<Button
-							fullWidth
-							type="submit"
-							variant="contained"
-							className={classes.button}
-							onClick={()=>blockUser(1)}
+							onClick={() => blockUser(1)}
 						>
 							<ReportIcon
 								color="secondary"

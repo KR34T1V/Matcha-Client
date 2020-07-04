@@ -72,19 +72,23 @@ const Liked = ({ classes, accessToken }) => {
 							);
 						})}
 						<NavLink to="/profile">
-								<Button
-									fullWidth
-									type="submit"
-									variant="contained"
-									className={classes.button}
-								>
-									Back
-								</Button>
-							</NavLink>
+							<Button
+								fullWidth
+								type="submit"
+								variant="contained"
+								className={classes.button}
+							>
+								Back
+							</Button>
+						</NavLink>
 					</Grid>
 				) : (
 					<Grid>
-						<Typography variant="h5" align="center" color="primary">
+						<Typography
+							variant="h5"
+							align="center"
+							color="primary"
+						>
 							No Likers yet...
 						</Typography>
 						<NavLink to="/profile">
