@@ -31,42 +31,48 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 
-	const uploadAvatar = async function (img){
+	const uploadAvatar = async function (img) {
 		setAvatarPreview(img);
 		let form = new FormData();
 		form.append('AccessToken', accessToken);
 		form.append('Avatar', img);
 
 		var request = new XMLHttpRequest();
-		request.open("POST", 'http://localhost:3030/user/updateProfile/avatar');
+		request.open(
+			'POST',
+			'http://localhost:3030/user/updateProfile/avatar',
+		);
 		request.send(form);
 		request.onreadystatechange = function () {
-			if (this.readyState === 4 && this.status === 200){
+			if (this.readyState === 4 && this.status === 200) {
 				let data = JSON.parse(request.response);
 				if (data != null && data.data.Avatar != null)
 					setAvatar(data.data.Avatar);
 			}
-		}
-	}
+		};
+	};
 
-	const uploadGallery = async function (key, img){
-		setAvatarPreview(img)
+	const uploadGallery = async function (key, img) {
+		setAvatarPreview(img);
 		let form = new FormData();
 		form.append('AccessToken', accessToken);
 		form.append('Key', key);
 		form.append('Image', img);
 
 		var request = new XMLHttpRequest();
-		request.open("POST", 'http://localhost:3030/user/updateProfile/gallery');
+		request.open(
+			'POST',
+			'http://localhost:3030/user/updateProfile/gallery',
+		);
 		request.send(form);
 		request.onreadystatechange = function () {
-			if (this.readyState === 4 && this.status === 200){
+			if (this.readyState === 4 && this.status === 200) {
 				let data = JSON.parse(request.response);
 				if (data != null && data.data.Images != null)
 					setOtherImg(data.data.Images);
 			}
-		}
-	}
+		};
+	};
 
 	const saveProfile = async function () {
 		const raw = await fetch('http://localhost:3030/user/updateProfile', {
@@ -87,7 +93,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 		});
 		const data = await raw.json();
 		console.log(data);
-	}
+	};
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
 			method: 'post',
@@ -103,16 +109,18 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 			}),
 		});
 		const data = await raw.json();
-		if (data.data != null && data.data.errors != null && data.data.errors.length > 0)
+		if (
+			data.data != null &&
+			data.data.errors != null &&
+			data.data.errors.length > 0
+		)
 			setErrors(data.data.errors);
-		if (data.data != null && data.data.result === 'Success'){
+		if (data.data != null && data.data.result === 'Success') {
 			console.log(data.data.Result);
 		} else {
-			setErrors(["Network Error"]);
+			setErrors(['Network Error']);
 		}
-	}
-
-
+	};
 
 	useEffect(() => {
 		const getCurrentUser = async () => {
@@ -120,8 +128,8 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				`http://localhost:3030/user/profile?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			if (data.data != null){
-				if (data.data.errors != null && data.data.errors.length > 0){
+			if (data.data != null) {
+				if (data.data.errors != null && data.data.errors.length > 0) {
 					setErrors(data.data.errors);
 				}
 				const profile = data.data;
@@ -131,8 +139,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				setEmail(profile.Email);
 				setGender(profile.Gender);
 				setPreference(profile.SexualPreference);
-				if (profile.Avatar != null)
-					setAvatar(profile.Avatar);
+				if (profile.Avatar != null) setAvatar(profile.Avatar);
 				if (profile.Images != null && profile.Images.length > 0)
 					setOtherImg(profile.Images);
 				setMyTags(profile.Interests);
@@ -200,35 +207,41 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 									justify="center"
 									style={{ marginTop: '12px' }}
 								>
-								{avatar !== '' ? (
-									<img
-										src={avatar}
-										alt="avatar"
-										style={{
-											borderRadius: '10px',
-											marginBottom: '16px',
+									{avatar !== '' ? (
+										<img
+											src={avatar}
+											alt="avatar"
+											style={{
+												borderRadius: '10px',
+												marginBottom: '16px',
+											}}
+										/>
+									) : avatarPreview !== '' ? (
+										<img
+											src={URL.createObjectURL(
+												avatarPreview,
+											)}
+											alt="avatar"
+											style={{
+												borderRadius: '10px',
+												marginBottom: '16px',
+											}}
+										/>
+									) : null}
+									<input
+										type="file"
+										name="avatar"
+										onChange={(e) => {
+											uploadAvatar(e.target.files[0]);
 										}}
 									/>
-								): (avatarPreview !== '' ? (
-									<img
-										src={URL.createObjectURL(avatarPreview)}
-										alt="avatar"
-										style={{
-											borderRadius: '10px',
-											marginBottom: '16px',
-										}}
-									/>
-								): (null))}
-								<input type="file" name="avatar" onChange={(e)=>{
-									uploadAvatar(e.target.files[0]);
-									}
-								}/>
 									<Typography
 										variant="subtitle2"
 										align="center"
 										color="primary"
 									>
-										This is where the avatar upload is meant to be
+										This is where the avatar upload is
+										meant to be
 									</Typography>
 								</Grid>
 							</Grid>
@@ -241,29 +254,53 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 												src={img}
 												alt="other"
 												className={classes.otherImg}
-												style={{ borderRadius: '10px' }}
+												style={{
+													borderRadius: '10px',
+												}}
 											/>
-											<input type="file" name="gallery" onChange={(e)=>{
-												uploadGallery(key, e.target.files[0]);
-											}}/>
+											<input
+												type="file"
+												name="gallery"
+												onChange={(e) => {
+													uploadGallery(
+														key,
+														e.target.files[0],
+													);
+												}}
+											/>
 										</>
 									))}
 									{otherImg == null ? (
-										<input type="file" name="gallery" onChange={(e)=>{
-												uploadGallery(0, e.target.files[0]);
-										}}/>
-									) : (otherImg.length < 5 ? (
-										<input type="file" name="gallery" onChange={(e)=>{
-												uploadGallery(otherImg.length, e.target.files[0]);
-										}}/>) : (null))
-									}
+										<input
+											type="file"
+											name="gallery"
+											onChange={(e) => {
+												uploadGallery(
+													0,
+													e.target.files[0],
+												);
+											}}
+										/>
+									) : otherImg.length < 5 ? (
+										<input
+											type="file"
+											name="gallery"
+											onChange={(e) => {
+												uploadGallery(
+													otherImg.length,
+													e.target.files[0],
+												);
+											}}
+										/>
+									) : null}
 								</Grid>
 								<Typography
 									variant="subtitle2"
 									align="center"
 									color="primary"
 								>
-									This is where the other image upload is meant to be 
+									This is where the other image upload is
+									meant to be
 								</Typography>
 							</Grid>
 
@@ -477,6 +514,17 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 											className={classes.button}
 										>
 											See Who Liked Me?
+										</Button>
+									</NavLink>
+
+									<NavLink to="/connexions">
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											Connexions
 										</Button>
 									</NavLink>
 

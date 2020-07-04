@@ -37,6 +37,20 @@ const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
 					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item className={classes.title}>
+								<NavLink
+									to="/connexions"
+									className={classes.link}
+								>
+									<Typography
+										variant="h6"
+										color="secondary"
+										style={{ cursor: 'pointer' }}
+									>
+										Connexions
+									</Typography>
+								</NavLink>
+							</Grid>
+							<Grid item className={classes.title}>
 								<Typography
 									variant="h6"
 									color="secondary"
@@ -117,7 +131,7 @@ const styles = (theme) => ({
 	},
 	right: {
 		[theme.breakpoints.up('sm')]: {
-			width: '15%',
+			width: '20%',
 		},
 		[theme.breakpoints.down('sm')]: {
 			width: '50%',

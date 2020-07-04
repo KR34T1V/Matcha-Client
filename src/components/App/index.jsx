@@ -18,12 +18,14 @@ import Viewed from '../Viewed';
 import Liked from '../Liked';
 import PasswordReset from '../PasswordReset';
 import VerifyEmail from '../VerifyEmail';
+import Chat from '../Chat';
+import Connexions from '../Connexions';
 
-const App = ({ location, classes }) => {
+const App = ({ location, match, classes }) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [verified, setVerified] = useState(false);
 	const [accessToken, setAccessToken] = useState('');
-	
+
 	const [errors, setErrors] = useState([]);
 	const logInUser = async (email, pwd) => {
 		const raw = await fetch('http://localhost:3030/login', {
@@ -71,8 +73,8 @@ const App = ({ location, classes }) => {
 					verified ? (
 						<Switch location={location}>
 							<Route exact path="/">
-								<Home 
-									accessToken={accessToken} 
+								<Home
+									accessToken={accessToken}
 									errors={errors}
 									setErrors={setErrors}
 								/>
@@ -91,11 +93,17 @@ const App = ({ location, classes }) => {
 								<Liked accessToken={accessToken} />
 							</Route>
 							<Route exact path="/people/:id">
-								<People 
+								<People
 									accessToken={accessToken}
 									errors={errors}
 									setErrors={setErrors}
 								/>
+							</Route>
+							<Route path="/chat/:id">
+								<Chat accessToken={accessToken} />
+							</Route>
+							<Route exact path="/connexions">
+								<Connexions accessToken={accessToken} />
 							</Route>
 							<Redirect exact from="/login" to="/" />
 							<Route render={() => <div>Not found</div>} />
@@ -111,6 +119,9 @@ const App = ({ location, classes }) => {
 					<Switch location={location}>
 						<Redirect exact from="/" to="/login" />
 						<Redirect exact from="/verify" to="/login" />
+						<Redirect exact from="/chat" to="/login" />
+						<Redirect exact from="/connexions" to="/login" />
+						<Redirect exact from="/chat/:id" to="/login" />
 						<Route path="/login">
 							<Login
 								logIn={logInUser}

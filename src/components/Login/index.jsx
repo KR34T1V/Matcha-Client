@@ -78,7 +78,10 @@ const Login = ({ classes, logIn, errors, setErrors }) => {
 								Log In
 							</Button>
 
-							<NavLink to="signup">
+							<NavLink
+								to="/signup"
+								style={{ textDecoration: 'none' }}
+							>
 								<Button
 									fullWidth
 									type="submit"
@@ -92,7 +95,7 @@ const Login = ({ classes, logIn, errors, setErrors }) => {
 					</Grid>
 				</Grid>
 			</Paper>
-			<NavLink to="passwordReset" className={classes.link}>
+			<NavLink to="/passwordReset" className={classes.link}>
 				<Typography
 					variant="body1"
 					color="secondary"
