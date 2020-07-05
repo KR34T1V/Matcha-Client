@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -44,9 +44,12 @@ const App = ({ location, match, classes }) => {
 		if (data.data.errors != null) {
 			setErrors(data.data.errors);
 		} else if (data.data != null && data.data.AccessToken != null) {
-			setAccessToken(data.data.AccessToken);
+			const { AccessToken, Verified } = data.data;
+			setAccessToken(AccessToken);
 			setLoggedIn(true);
-			setVerified(data.data.Verified);
+			setVerified(Verified);
+			localStorage.setItem('accessToken', AccessToken);
+			localStorage.setItem('verified', Verified);
 		} else {
 			setErrors(['Network Error']);
 		}
@@ -58,8 +61,29 @@ const App = ({ location, match, classes }) => {
 		);
 		setLoggedIn(false);
 		setAccessToken('');
+		localStorage.setItem('accessToken', null);
+		localStorage.setItem('verified', null);
 		setErrors([]);
 	};
+
+	const checkLogin = () => {
+		const accToken = localStorage.getItem('accessToken');
+		const verifyed = localStorage.getItem('verified');
+		// localStorage sets as string :/
+		if (accToken !== 'null' && verifyed !== 'null') {
+			setAccessToken(accToken);
+			setVerified(verifyed);
+			setLoggedIn(true);
+		} else {
+			setVerified(false);
+			setLoggedIn(false);
+			setAccessToken('');
+		}
+	};
+
+	useEffect(() => {
+		checkLogin();
+	}, []);
 
 	return (
 		<Router>
@@ -122,6 +146,7 @@ const App = ({ location, match, classes }) => {
 						<Redirect exact from="/chat" to="/login" />
 						<Redirect exact from="/connexions" to="/login" />
 						<Redirect exact from="/chat/:id" to="/login" />
+						<Redirect exact from="/profile" to="/login" />
 						<Route path="/login">
 							<Login
 								logIn={logInUser}

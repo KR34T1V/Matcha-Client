@@ -25,6 +25,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [avatarPreview, setAvatarPreview] = useState('');
 	const [otherImg, setOtherImg] = useState([]);
 	const [myTags, setMyTags] = useState([]);
+	const [bio, setBio] = useState('');
 	const [allTags, setAllTags] = useState([]);
 
 	const [pwd, setPwd] = useState('');
@@ -89,6 +90,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				Lastname: last,
 				Gender: gender,
 				SexualPreference: preference,
+				Biography: bio,
 			}),
 		});
 		const data = await raw.json();
@@ -139,6 +141,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				setEmail(profile.Email);
 				setGender(profile.Gender);
 				setPreference(profile.SexualPreference);
+				setBio(profile.Biography);
 				if (profile.Avatar != null) setAvatar(profile.Avatar);
 				if (profile.Images != null && profile.Images.length > 0)
 					setOtherImg(profile.Images);
@@ -204,71 +207,92 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 							<Grid item className={classes.item}>
 								<Grid
 									container
-									justify="center"
-									style={{ marginTop: '12px' }}
+									direction="column"
+									className={classes.avatar}
 								>
-									{avatar !== '' ? (
-										<img
-											src={avatar}
-											alt="avatar"
-											style={{
-												borderRadius: '10px',
-												marginBottom: '16px',
+									<Grid item>
+										{avatar !== '' ? (
+											<img
+												src={avatar}
+												alt="avatar"
+												style={{
+													borderRadius: '10px',
+													marginBottom: '32px',
+													width: '100%',
+												}}
+											/>
+										) : avatarPreview !== '' ? (
+											<img
+												src={URL.createObjectURL(
+													avatarPreview,
+												)}
+												alt="avatar"
+												style={{
+													borderRadius: '10px',
+													marginBottom: '32px',
+													width: '100%',
+												}}
+											/>
+										) : null}
+									</Grid>
+									<Grid item style={{ marginTop: '40px' }}>
+										<input
+											type="file"
+											name="avatar"
+											onChange={(e) => {
+												uploadAvatar(
+													e.target.files[0],
+												);
 											}}
 										/>
-									) : avatarPreview !== '' ? (
-										<img
-											src={URL.createObjectURL(
-												avatarPreview,
-											)}
-											alt="avatar"
-											style={{
-												borderRadius: '10px',
-												marginBottom: '16px',
-											}}
-										/>
-									) : null}
-									<input
-										type="file"
-										name="avatar"
-										onChange={(e) => {
-											uploadAvatar(e.target.files[0]);
-										}}
-									/>
-									<Typography
-										variant="subtitle2"
-										align="center"
-										color="primary"
-									>
-										This is where the avatar upload is
-										meant to be
-									</Typography>
+									</Grid>
 								</Grid>
 							</Grid>
 
 							<Grid item className={classes.item}>
-								<Grid container justify="space-evenly">
+								<Grid container justify="center">
 									{otherImg.map((img, key) => (
-										<>
-											<img
-												src={img}
-												alt="other"
-												className={classes.otherImg}
-												style={{
-													borderRadius: '10px',
-												}}
-											/>
-											<input
-												type="file"
-												name="gallery"
-												onChange={(e) => {
-													uploadGallery(
-														key,
-														e.target.files[0],
-													);
-												}}
-											/>
-										</>
+										<Grid item>
+											<Grid
+												container
+												direction="column"
+											>
+												<Grid
+													item
+													className={
+														classes.otherImg
+													}
+												>
+													<img
+														src={img}
+														alt="other"
+														style={{
+															width: '100%',
+															borderRadius:
+																'10px',
+														}}
+													/>
+												</Grid>
+												<Grid
+													item
+													className={
+														classes.otherImg
+													}
+												>
+													<input
+														type="file"
+														name="gallery"
+														onChange={(e) => {
+															uploadGallery(
+																key,
+																e.target
+																	.files[0],
+															);
+														}}
+													/>
+												</Grid>
+											</Grid>
+										</Grid>
 									))}
 									{otherImg == null ? (
 										<input
@@ -294,14 +318,6 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 										/>
 									) : null}
 								</Grid>
-								<Typography
-									variant="subtitle2"
-									align="center"
-									color="primary"
-								>
-									This is where the other image upload is
-									meant to be
-								</Typography>
 							</Grid>
 
 							<Grid item className={classes.item}>
@@ -350,6 +366,19 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 										}
 										value={email}
 									/>
+
+									<TextField
+										fullWidth
+										label="Biography"
+										type="input"
+										color="primary"
+										value={bio}
+										onChange={(e) =>
+											setBio(e.target.value)
+										}
+										multiline
+									/>
+
 									<Grid container justify="space-evenly">
 										<Grid item>
 											<Typography
@@ -560,8 +589,8 @@ const styles = (theme) => ({
 	paper: {
 		padding: theme.spacing(2),
 		backgroundColor: theme.palette.secondary.main,
-		width: '40%',
-		marginLeft: '30%',
+		width: '60%',
+		marginLeft: '20%',
 		[theme.breakpoints.down('sm')]: {
 			width: '90%',
 			marginLeft: '0',
@@ -591,8 +620,17 @@ const styles = (theme) => ({
 		borderBottom: `1px dotted ${theme.palette.primary.main}`,
 	},
 	otherImg: {
-		width: '30%',
+		width: '90%',
 		marginBottom: theme.spacing(2),
+	},
+	avatar: {
+		marginTop: '12px',
+		width: '60%',
+		marginLeft: '20%',
+		[theme.breakpoints.down('sm')]: {
+			width: '100%',
+			marginLeft: 0,
+		},
 	},
 });
 
