@@ -16,8 +16,8 @@ import ReportIcon from '@material-ui/icons/ReportOutlined';
 
 const People = ({ classes, accessToken, errors, setErrors }) => {
 	const [userProfile, setProfile] = useState({});
-	const [Liked, setLiked] = useState(false);
-	const [Blocked, setBlocked] = useState(false);
+	const [Liked, setLiked] = useState();
+	const [Blocked, setBlocked] = useState();
 	const { id: personId } = useParams();
 
 	const likeUser = async () => {
@@ -237,7 +237,7 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 					) : null}
 
 					<Grid item className={classes.item}>
-						{Liked === true ? (
+						{Liked === false ? (
 							<Button
 								fullWidth
 								type="submit"

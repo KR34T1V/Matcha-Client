@@ -115,6 +115,12 @@ const VerifyEmail = ({ classes, verifyUser }) => {
 							>
 								Send Email
 							</Button>
+							<Button onClick={() =>{
+								localStorage.setItem("accessToken", null);
+								localStorage.setItem("verified", null);
+							}}>
+							hallo world
+							</Button>
 						</form>
 					</Grid>
 				</Grid>

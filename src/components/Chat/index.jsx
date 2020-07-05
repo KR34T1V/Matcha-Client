@@ -46,14 +46,14 @@ const Chat = ({ classes, accessToken }) => {
 			},
 			body: JSON.stringify({
 				AccessToken: accessToken,
-				to: currentId,
-				message,
+				To: currentId,
+				Message: message,
 			}),
 		});
 		const data = await raw.json();
 		if (data.errors == null) {
 			setMessage('');
-			setMessages(data.data.messages);
+			setMessages(data.data.Messages);
 		}
 	};
 
