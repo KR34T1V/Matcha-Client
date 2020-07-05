@@ -27,12 +27,13 @@ const Chat = ({ classes, accessToken }) => {
 	const callChat = async () => {
 		if (currentId != null) {
 			const raw = await fetch(
-				`http://localhost:3030/chat?AccessToken=1&Id=${currentId}`,
+				`http://localhost:3030/user/chat?AccessToken=${accessToken}&Id=${currentId}`,
 			);
 			const data = await raw.json();
 			const { Chat, Username } = data.data;
 			setMessages(Chat);
 			setUsername(Username);
+			console.log(Username);
 		}
 	};
 
@@ -95,12 +96,12 @@ const Chat = ({ classes, accessToken }) => {
 									<Typography
 										variant="body1"
 										align={
-											item.from === Number(currentId)
+											item.FromId === Number(currentId)
 												? 'left'
 												: 'right'
 										}
 									>
-										{item.message}
+										{item.Message}
 									</Typography>
 								</Paper>
 							</Grid>

@@ -16,15 +16,15 @@ const Connexions = ({ classes, accessToken }) => {
 		const fetchCons = async () => {
 			setLoad(true);
 			const raw = await fetch(
-				`http://localhost:3030/connexions?AccessToken=${accessToken}`,
+				`http://localhost:3030/user/connexions?AccessToken=${accessToken}`,
 			);
 			const data = await raw.json();
-			setCons(data.data);
+			setCons(data.data.Connexions);
 			setLoad(false);
 		};
 
 		fetchCons();
-	}, []);
+	}, [accessToken]);
 
 	return (
 		<Grid
