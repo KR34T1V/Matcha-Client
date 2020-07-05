@@ -14,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import tags from './tags';
+import allTags from './tags';
 
 const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [username, setUsername] = useState('');
@@ -28,7 +28,6 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 	const [otherImg, setOtherImg] = useState([]);
 	const [myTags, setMyTags] = useState([]);
 	const [bio, setBio] = useState('');
-	const [allTags, setAllTags] = useState(tags);
 
 	const [pwd, setPwd] = useState('');
 	const [npwd, setNPwd] = useState('');

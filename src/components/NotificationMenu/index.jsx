@@ -35,7 +35,7 @@ const NotificationMenu = ({ classes }) => {
 
 	const callNotifications = async (accToken) => {
 		const raw = await fetch(
-			`http://localhost:3030/notifications?AccessToken=${accToken}`,
+			`http://localhost:3030/user/notifications?AccessToken=${accToken}`,
 		);
 		const data = await raw.json();
 		const { notifications } = data.data;

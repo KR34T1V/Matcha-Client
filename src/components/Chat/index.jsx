@@ -12,11 +12,12 @@ const Chat = ({ classes, accessToken }) => {
 	const { id } = useParams();
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
-	const [currentId, setCId] = useState(id);
+	const currentId = id;
 	const [uid, setUsername] = useState('');
 
 	const getChat = () => {
-		if (currentId != null) {
+		const id = localStorage.getItem('chat');
+		if (id != null && id !== 'null' && id === currentId) {
 			setTimeout(async () => {
 				await callChat();
 				getChat();
@@ -25,7 +26,8 @@ const Chat = ({ classes, accessToken }) => {
 	};
 
 	const callChat = async () => {
-		if (currentId != null) {
+		const id = localStorage.getItem('chat');
+		if (id != null && id !== 'null' && id === currentId) {
 			const raw = await fetch(
 				`http://localhost:3030/user/chat?AccessToken=${accessToken}&Id=${currentId}`,
 			);
@@ -57,11 +59,12 @@ const Chat = ({ classes, accessToken }) => {
 	};
 
 	useEffect(() => {
+		localStorage.setItem('chat', currentId);
 		callChat();
 		getChat();
 
 		return () => {
-			setCId(null);
+			localStorage.setItem('chat', null);
 		};
 	}, []);
 
