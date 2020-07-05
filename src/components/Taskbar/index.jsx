@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
@@ -9,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
-import { NavLink } from 'react-router-dom';
+import NotificationMenu from '../NotificationMenu';
 
 const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
 	return isLoggedIn ? (
@@ -36,6 +37,9 @@ const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
 
 					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
+							<Grid item className={classes.title}>
+								<NotificationMenu />
+							</Grid>
 							<Grid item className={classes.title}>
 								<NavLink
 									to="/connexions"

@@ -33,7 +33,6 @@ const Chat = ({ classes, accessToken }) => {
 			const { Chat, Username } = data.data;
 			setMessages(Chat);
 			setUsername(Username);
-			console.log(Username);
 		}
 	};
 

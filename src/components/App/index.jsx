@@ -70,9 +70,14 @@ const App = ({ location, match, classes }) => {
 		const accToken = localStorage.getItem('accessToken');
 		const verifyed = localStorage.getItem('verified');
 		// localStorage sets as string :/
-		if (accToken !== 'null' && verifyed !== 'null') {
+		if (
+			accToken !== 'null' &&
+			verifyed !== 'null' &&
+			accToken != null &&
+			verifyed != null
+		) {
 			setAccessToken(accToken);
-			setVerified(verifyed);
+			setVerified(Boolean(verifyed));
 			setLoggedIn(true);
 		} else {
 			setVerified(false);
