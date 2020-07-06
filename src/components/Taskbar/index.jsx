@@ -6,6 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -17,6 +18,12 @@ const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
 		<AppBar position="sticky" elevation={0} className={classes.ruler}>
 			<Toolbar variant="dense">
 				<Grid container justify="space-between">
+					<Button onClick={() =>{
+						localStorage.setItem("accessToken", null);
+						localStorage.setItem("verified", null);
+					}}>
+					hallo world
+					</Button>
 					{verified ? (
 						<Grid item className={classes.title}>
 							<NavLink to="/" className={classes.link}>
