@@ -147,7 +147,6 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				if (profile.Images != null && profile.Images.length > 0)
 					setOtherImg(profile.Images);
 				if (profile.Interests != null) setMyTags(profile.Interests);
-				else setMyTags([]);
 			}
 		};
 		getCurrentUser();
