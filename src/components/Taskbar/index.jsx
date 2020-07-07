@@ -13,16 +13,18 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import NotificationMenu from '../NotificationMenu';
 
-const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
+const Taskbar = ({ isLoggedIn, classes, logOut, verified, expiredToken }) => {
 	return isLoggedIn ? (
 		<AppBar position="sticky" elevation={0} className={classes.ruler}>
 			<Toolbar variant="dense">
 				<Grid container justify="space-between">
-					<Button onClick={() =>{
-						localStorage.setItem("accessToken", null);
-						localStorage.setItem("verified", null);
-					}}>
-					hallo world
+					<Button
+						onClick={() => {
+							localStorage.setItem('accessToken', null);
+							localStorage.setItem('verified', null);
+						}}
+					>
+						hallo world
 					</Button>
 					{verified ? (
 						<Grid item className={classes.title}>
@@ -45,7 +47,9 @@ const Taskbar = ({ isLoggedIn, classes, logOut, verified }) => {
 					<Grid item className={classes.right}>
 						<Grid container justify="space-evenly">
 							<Grid item className={classes.title}>
-								<NotificationMenu />
+								<NotificationMenu
+									expiredToken={expiredToken}
+								/>
 							</Grid>
 							<Grid item className={classes.title}>
 								<NavLink

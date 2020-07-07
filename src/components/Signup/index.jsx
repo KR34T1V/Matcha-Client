@@ -12,7 +12,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-const Register = ({ classes }) => {
+const Register = ({ classes, history }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -22,6 +22,7 @@ const Register = ({ classes }) => {
 	const [cpwd, setCPwd] = useState('');
 	const [gender, setGender] = useState('Female');
 	const [preference, setPreference] = useState('Bisexual');
+	const [errors, setErrors] = useState([]);
 
 	const handleGender = (event) => {
 		setGender(event.target.value);
@@ -33,29 +34,19 @@ const Register = ({ classes }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch('http://localhost:3030/register', {
-			method: 'post',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
 
-			//make sure to serialize your JSON body
-			body: JSON.stringify({
-				Username: username,
-				Firstname: first,
-				Lastname: last,
-				Birthdate: dob,
-				Email: email,
-				Password: pwd,
-				RePassword: cpwd,
-				Gender: gender,
-				SexualPreference: preference,
-			}),
-		}).then((response) => {
-			console.log(response);
-			//do something awesome that makes the world a better place
-		});
+		const submit = async () => {
+			const raw = await fetch('http://localhost:3030/register');
+
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.error.length > 0) {
+				setErrors(data.errors);
+			} else if (data.res === 'Success') {
+				history.push('/login');
+			} else setErrors(['Network Error']);
+		};
+
+		submit();
 	};
 	return (
 		<Grid
@@ -208,6 +199,19 @@ const Register = ({ classes }) => {
 									</RadioGroup>
 								</Grid>
 							</Grid>
+
+							{errors.map((msg) => (
+								<Grid item>
+									<Typography
+										key={msg}
+										variant="body1"
+										color="primary"
+									>
+										{msg}
+									</Typography>
+								</Grid>
+							))}
+
 							<Button
 								fullWidth
 								type="submit"

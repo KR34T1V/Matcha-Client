@@ -8,23 +8,22 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 
-const Home = ({ classes, accessToken, setErrors, errors }) => {
+const Home = ({ classes, accessToken, expiredToken }) => {
 	const [profiles, setProfiles] = useState([]);
+	const [errors, setErrors] = useState([]);
 
 	useEffect(() => {
 		const getProfiles = async () => {
 			const raw = await fetch(
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
-			const data = await raw.json();
-			if (
-				data.data != null &&
-				data.data.errors != null &&
-				data.data.errors.length > 0
-			)
-				setErrors(errors);
-			if (data.data != null && data.data.length > 0) {
-				setProfiles(data.data);
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors.length > 0)
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			if (data.res === 'Success' && data.People != null) {
+				setProfiles(data.People);
 			}
 		};
 
@@ -33,6 +32,13 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 
 	return (
 		<>
+			{errors.map((msg) => (
+				<Grid item>
+					<Typography key={msg} variant="body1" color="secondary">
+						{msg}
+					</Typography>
+				</Grid>
+			))}
 			{profiles.map(
 				({
 					Username,
@@ -51,17 +57,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 						className={classes.content}
 						key={Id}
 					>
-						{errors.map((msg) => (
-							<Grid item>
-								<Typography
-									key={msg}
-									variant="body1"
-									color="primary"
-								>
-									{msg}
-								</Typography>
-							</Grid>
-						))}
 						<Paper elevation={4} className={classes.paper}>
 							<Grid container justify="center" spacing={2}>
 								<Grid item className={classes.item}>

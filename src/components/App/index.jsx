@@ -27,6 +27,15 @@ const App = ({ location, match, classes }) => {
 	const [accessToken, setAccessToken] = useState('');
 
 	const [errors, setErrors] = useState([]);
+
+	const expiredToken = () => {
+		setLoggedIn(false);
+		setAccessToken('');
+		localStorage.setItem('accessToken', null);
+		localStorage.setItem('verified', null);
+		setErrors([]);
+	};
+
 	const logInUser = async (email, pwd) => {
 		const raw = await fetch('http://localhost:3030/login', {
 			method: 'post',
@@ -40,16 +49,17 @@ const App = ({ location, match, classes }) => {
 			}),
 		});
 
-		const data = await raw.json();
-		if (data.data.errors != null) {
-			setErrors(data.data.errors);
-		} else if (data.data != null && data.data.AccessToken != null) {
-			const { AccessToken, Verified } = data.data;
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors.length > 0) {
+			setErrors(data.errors);
+		} else if (data.res === 'Success' && data.AccessToken != null) {
+			const { AccessToken, Verified } = data;
 			setAccessToken(AccessToken);
 			setLoggedIn(true);
 			setVerified(Verified);
 			localStorage.setItem('accessToken', AccessToken);
 			localStorage.setItem('verified', Verified);
+			setErrors([]);
 		} else {
 			setErrors(['Network Error']);
 		}
@@ -97,6 +107,7 @@ const App = ({ location, match, classes }) => {
 					isLoggedIn={loggedIn}
 					verified={verified}
 					logOut={logOutUser}
+					expiredToken={expiredToken}
 				/>
 				{loggedIn ? (
 					verified ? (
@@ -104,35 +115,56 @@ const App = ({ location, match, classes }) => {
 							<Route exact path="/">
 								<Home
 									accessToken={accessToken}
-									errors={errors}
-									setErrors={setErrors}
+									expiredToken={expiredToken}
 								/>
 							</Route>
 							<Route exact path="/profile">
 								<Profile
 									accessToken={accessToken}
-									errors={errors}
-									setErrors={setErrors}
+									expiredToken={expiredToken}
 								/>
 							</Route>
 							<Route exact path="/viewed">
-								<Viewed accessToken={accessToken} />
+								<Viewed
+									accessToken={accessToken}
+									expiredToken={expiredToken}
+								/>
 							</Route>
-							<Route exact path="/liked">
-								<Liked accessToken={accessToken} />
+							<Route
+								exact
+								path="/liked"
+								expiredToken={expiredToken}
+							>
+								<Liked
+									accessToken={accessToken}
+									expiredToken={expiredToken}
+								/>
 							</Route>
-							<Route exact path="/people/:id">
+							<Route
+								exact
+								path="/people/:id"
+								expiredToken={expiredToken}
+							>
 								<People
 									accessToken={accessToken}
-									errors={errors}
-									setErrors={setErrors}
+									expiredToken={expiredToken}
 								/>
 							</Route>
 							<Route path="/chat/:id">
-								<Chat accessToken={accessToken} />
+								<Chat
+									accessToken={accessToken}
+									expiredToken={expiredToken}
+								/>
 							</Route>
-							<Route exact path="/connexions">
-								<Connexions accessToken={accessToken} />
+							<Route
+								exact
+								path="/connexions"
+								expiredToken={expiredToken}
+							>
+								<Connexions
+									accessToken={accessToken}
+									expiredToken={expiredToken}
+								/>
 							</Route>
 							<Redirect exact from="/login" to="/" />
 							<Route render={() => <div>Not found</div>} />
@@ -140,7 +172,10 @@ const App = ({ location, match, classes }) => {
 					) : (
 						<Switch location={location}>
 							<Route exact path="/verify" />
-							<VerifyEmail verifyUser={setVerified} />
+							<VerifyEmail
+								verifyUser={setVerified}
+								expiredToken={expiredToken}
+							/>
 							<Redirect exact from="/login" to="/verify" />
 						</Switch>
 					)
@@ -159,7 +194,7 @@ const App = ({ location, match, classes }) => {
 								setErrors={setErrors}
 							/>
 						</Route>
-						<Route path="/signup" component={Signup} />
+						<Route exact path="/signup" component={Signup} />
 						<Route
 							exact
 							path="/passwordReset"
