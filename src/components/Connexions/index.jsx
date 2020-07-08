@@ -8,9 +8,10 @@ import Paper from '@material-ui/core/Paper';
 
 import { NavLink } from 'react-router-dom';
 
-const Connexions = ({ classes, accessToken }) => {
+const Connexions = ({ classes, accessToken, expiredToken }) => {
 	const [cons, setCons] = useState([]);
 	const [load, setLoad] = useState(false);
+	const [errors, setErrors] = useState([]);
 
 	useEffect(() => {
 		const fetchCons = async () => {
@@ -18,9 +19,15 @@ const Connexions = ({ classes, accessToken }) => {
 			const raw = await fetch(
 				`http://localhost:3030/user/connexions?AccessToken=${accessToken}`,
 			);
-			const data = await raw.json();
-			setCons(data.data.Connexions);
-			setLoad(false);
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success' && data.Connexions != null) {
+				setCons(data.Connexions);
+				setLoad(false);
+			} else setErrors(['Network Error']);
 		};
 
 		fetchCons();
@@ -33,6 +40,13 @@ const Connexions = ({ classes, accessToken }) => {
 			spacing={2}
 			style={{ marginTop: '16px' }}
 		>
+			{errors.map((msg) => (
+				<Grid item>
+					<Typography key={msg} variant="body1" color="secondary">
+						{msg}
+					</Typography>
+				</Grid>
+			))}
 			{load === false && cons.length > 0 ? (
 				cons.map((item) => (
 					<Grid item key={item.Id}>

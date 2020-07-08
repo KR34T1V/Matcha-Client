@@ -8,17 +8,25 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const Liked = ({ classes, accessToken }) => {
+const Liked = ({ classes, accessToken, expiredToken }) => {
 	const [likers, setLikers] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	useEffect(() => {
 		const getLikes = async () => {
 			const raw = await fetch(
 				`http://localhost:3030/getProfileLikes?AccessToken=${accessToken}`,
 			);
-			const data = await raw.json();
-			setLikers(data.data);
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.Likers != null) {
+				setLikers(data.Likers);
+			} else setErrors(['Network Error']);
 		};
+
 		getLikes();
 	}, [accessToken]);
 
@@ -33,6 +41,15 @@ const Liked = ({ classes, accessToken }) => {
 				<Typography variant="h4" align="center" color="primary">
 					Likers
 				</Typography>
+
+				{errors.map((msg) => (
+					<Grid item>
+						<Typography key={msg} variant="body1" color="primary">
+							{msg}
+						</Typography>
+					</Grid>
+				))}
+
 				{likers === '' ? (
 					<CircularProgress variant="indeterminate" />
 				) : likers.length > 0 ? (

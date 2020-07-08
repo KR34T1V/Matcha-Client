@@ -8,12 +8,13 @@ import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-const Chat = ({ classes, accessToken }) => {
+const Chat = ({ classes, accessToken, expiredToken }) => {
 	const { id } = useParams();
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState('');
 	const currentId = id;
 	const [uid, setUsername] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	const getChat = () => {
 		const id = localStorage.getItem('chat');
@@ -31,10 +32,21 @@ const Chat = ({ classes, accessToken }) => {
 			const raw = await fetch(
 				`http://localhost:3030/user/chat?AccessToken=${accessToken}&Id=${currentId}`,
 			);
-			const data = await raw.json();
-			const { Chat, Username } = data.data;
-			setMessages(Chat);
-			setUsername(Username);
+			const { data } = await raw.json();
+
+			if (data.res === 'Error' && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (
+				data.res === 'Success' &&
+				data.Chat != null &&
+				data.Username != null
+			) {
+				const { Chat, Username } = data;
+				setMessages(Chat);
+				setUsername(Username);
+			}
 		}
 	};
 
@@ -51,11 +63,16 @@ const Chat = ({ classes, accessToken }) => {
 				Message: message,
 			}),
 		});
-		const data = await raw.json();
-		if (data.errors == null) {
+
+		const { data } = await raw.json();
+
+		if (data.res === 'Error' && data.errors.length > 0) {
+			setErrors(data.errors);
+		} else if (data.res === 'Success' && data.Messages != null) {
 			setMessage('');
-			setMessages(data.data.Messages);
-		}
+			setMessages(data.Messages);
+			setErrors([]);
+		} else setErrors(['Network Error']);
 	};
 
 	useEffect(() => {
@@ -133,6 +150,14 @@ const Chat = ({ classes, accessToken }) => {
 					Send
 				</Button>
 			</Grid>
+
+			{errors.map((msg) => (
+				<Grid item>
+					<Typography key={msg} variant="body1" color="secondary">
+						{msg}
+					</Typography>
+				</Grid>
+			))}
 		</Grid>
 	);
 };

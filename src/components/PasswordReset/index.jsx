@@ -11,6 +11,7 @@ const PasswordReset = ({ classes, history }) => {
 	const [VerifyKey, setKey] = useState('');
 	const [Password, setPwd] = useState('');
 	const [RePassword, setRePwd] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -28,11 +29,14 @@ const PasswordReset = ({ classes, history }) => {
 			}),
 		});
 
-		const data = await raw.json();
+		const { data } = await raw.json();
 
-		if (data.error != null) {
-			console.log(data.error);
-		} else history.push('/login');
+		if (data.res === 'Error' && data.error.length > 0) {
+			setErrors(data.error);
+		}
+		if (data.res === 'Succes') {
+			history.push('/login');
+		} else setErrors(['Network Error']);
 	};
 
 	const resendEmail = async () => {
@@ -50,10 +54,12 @@ const PasswordReset = ({ classes, history }) => {
 			},
 		);
 
-		const data = await raw.json;
-		if (data.error != null) {
-			console.log(data.error);
-		}
+		const { data } = await raw.json;
+		if (data.res === 'Error' && data.errors.length > 0) {
+			setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(['Email sent successfully']);
+		} else setErrors(['Network Error']);
 	};
 
 	return (
@@ -102,6 +108,18 @@ const PasswordReset = ({ classes, history }) => {
 								color="primary"
 								onChange={(e) => setRePwd(e.target.value)}
 							/>
+
+							{errors.map((msg) => (
+								<Grid item>
+									<Typography
+										key={msg}
+										variant="body1"
+										color="primary"
+									>
+										{msg}
+									</Typography>
+								</Grid>
+							))}
 							<Button
 								fullWidth
 								type="submit"

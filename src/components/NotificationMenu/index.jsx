@@ -7,7 +7,7 @@ import NotificationIcon from '@material-ui/icons/NotificationsActiveOutlined';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-const NotificationMenu = ({ classes }) => {
+const NotificationMenu = ({ classes, expiredToken }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [notifications, setNotif] = useState([]);
 
@@ -37,11 +37,17 @@ const NotificationMenu = ({ classes }) => {
 		const raw = await fetch(
 			`http://localhost:3030/user/notifications?AccessToken=${accToken}`,
 		);
-		const data = await raw.json();
-		const { notifications } = data.data;
-		if (notifications == null) {
-			setNotif([]);
-		} else setNotif(notifications);
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors.length > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setNotif(data.errors);
+		} else if (
+			data.notifications != null &&
+			data.notifications.length > 0
+		) {
+			setNotif(data.notifications);
+		} else setNotif([]);
 	};
 
 	useEffect(() => {
@@ -83,7 +89,7 @@ const NotificationMenu = ({ classes }) => {
 					) : (
 						notifications.map(
 							({ Avatar, Username, Id, Message }) => (
-								<Grid item onClick={handleClose}>
+								<Grid item onClick={handleClose} key={Id}>
 									<NavLink
 										to={`/chat/${Id}`}
 										className={classes.link}
