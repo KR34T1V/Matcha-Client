@@ -202,8 +202,18 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 		const item = e.target.value;
 
 		if (item != null) {
-			const temp = [...myTags, item];
-			setMyTags(temp);
+			const found = myTags.indexOf(item);
+			console.log(found);
+			let temp = [];
+			if (found === -1) {
+				// not found === Add
+				temp = [...myTags, item];
+			} else if (found >= 0) {
+				// found === remove
+				temp = myTags;
+				temp[found] = null;
+			}
+			setMyTags(temp.filter((item) => item !== null));
 		}
 	};
 	return (
