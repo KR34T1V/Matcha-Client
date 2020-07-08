@@ -329,6 +329,7 @@ const styles = (theme) => ({
 		'& .MuiPagination-ul': {
 			backgroundColor: theme.palette.secondary.main,
 		},
+	},
 	link: {
 		textDecoration: 'none',
 	},
