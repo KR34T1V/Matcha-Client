@@ -54,6 +54,7 @@ const Register = ({ classes, history }) => {
 					RePassword: cpwd,
 				}),
 			});
+      
 			const { data } = await raw.json();
 			if (
 				data.res === 'Error' &&
@@ -253,7 +254,10 @@ const Register = ({ classes, history }) => {
 							>
 								Register
 							</Button>
-							<NavLink to="login">
+							<NavLink
+								to="login"
+								style={{ textDecoration: 'none' }}
+							>
 								<Button
 									fullWidth
 									type="submit"
@@ -281,6 +285,10 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 		width: '40%',
 		marginLeft: '30%',
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '0',
+		},
 	},
 	item: {
 		width: '90%',
