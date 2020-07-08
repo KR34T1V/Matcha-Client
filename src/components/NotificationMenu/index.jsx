@@ -71,9 +71,9 @@ const NotificationMenu = ({ classes, expiredToken }) => {
 				PaperProps={{
 					style: {
 						backgroundColor: '#df0203',
+						width: '35%',
 					},
 				}}
-				style={{ width: '100%' }}
 			>
 				<Grid container direction="column" spacing={2}>
 					{notifications.length === 0 ? (
@@ -136,6 +136,7 @@ const NotificationMenu = ({ classes, expiredToken }) => {
 const styles = (theme) => ({
 	img: {
 		width: '60%',
+		borderRadius: 15,
 	},
 	link: {
 		textDecoration: 'none',
