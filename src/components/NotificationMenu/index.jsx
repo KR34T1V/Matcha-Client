@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import NotificationIcon from '@material-ui/icons/NotificationsActiveOutlined';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const NotificationMenu = ({ classes, expiredToken }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -17,6 +18,15 @@ const NotificationMenu = ({ classes, expiredToken }) => {
 
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const clearNotifs = () => {
+		setNotif([]);
+		// Corry makes call here
+
+		// and here
+
+		// and here...
 	};
 
 	const getNotifications = () => {
@@ -87,45 +97,57 @@ const NotificationMenu = ({ classes, expiredToken }) => {
 							</Typography>
 						</Grid>
 					) : (
-						notifications.map(
-							({ Avatar, Username, Id, Message }) => (
-								<Grid item onClick={handleClose} key={Id}>
-									<NavLink
-										to={`/chat/${Id}`}
-										className={classes.link}
-									>
-										<Grid
-											container
-											justify="center"
-											spacing={0}
+						<>
+							{notifications.map(
+								({ Avatar, Username, Id, Message }) => (
+									<Grid item onClick={handleClose} key={Id}>
+										<NavLink
+											to={`/chat/${Id}`}
+											className={classes.link}
 										>
 											<Grid
-												item
-												style={{ width: '35%' }}
+												container
+												justify="center"
+												spacing={0}
 											>
-												<img
-													src={Avatar}
-													alt="Avatar"
-													className={classes.img}
-												/>
-											</Grid>
-
-											<Grid
-												item
-												style={{ width: '45%' }}
-											>
-												<Typography
-													variant="body1"
-													color="primary"
+												<Grid
+													item
+													style={{ width: '35%' }}
 												>
-													{Username} {Message}
-												</Typography>
+													<img
+														src={Avatar}
+														alt="Avatar"
+														className={
+															classes.img
+														}
+													/>
+												</Grid>
+
+												<Grid
+													item
+													style={{ width: '45%' }}
+												>
+													<Typography
+														variant="body1"
+														color="primary"
+													>
+														{Username} {Message}
+													</Typography>
+												</Grid>
 											</Grid>
-										</Grid>
-									</NavLink>
-								</Grid>
-							),
-						)
+										</NavLink>
+									</Grid>
+								),
+							)}
+							<Button
+								type="button"
+								variant="contained"
+								onClick={() => clearNotifs()}
+								className={classes.button}
+							>
+								Clear Notifications
+							</Button>
+						</>
 					)}
 				</Grid>
 			</Menu>
@@ -145,6 +167,11 @@ const styles = (theme) => ({
 		'&:hover': {
 			border: `1px dashed ${theme.palette.primary.main}`,
 		},
+	},
+	button: {
+		color: theme.palette.secondary.main,
+		backgroundColor: theme.palette.primary.main,
+		marginTop: theme.spacing(2),
 	},
 });
 
