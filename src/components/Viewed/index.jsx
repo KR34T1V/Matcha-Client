@@ -10,15 +10,21 @@ import Typography from '@material-ui/core/Typography';
 
 const Viewed = ({ classes, accessToken }) => {
 	const [viewers, setViewers] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	useEffect(() => {
 		const fetchViewed = async () => {
 			const raw = await fetch(
 				`http://localhost:3030/getProfileViews?AccessToken=${accessToken}`,
 			);
-			const data = await raw.json();
-			setViewers(data.data);
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors.length > 0) {
+				setErrors(data.errors);
+			} else if (data.Viewers != null && data.Viewers.length > 0) {
+				setViewers(data.Viewers);
+			} else setErrors(['Network Error']);
 		};
+
 		fetchViewed();
 	}, [accessToken]);
 
@@ -33,6 +39,14 @@ const Viewed = ({ classes, accessToken }) => {
 				<Typography variant="h4" align="center" color="primary">
 					Viewers
 				</Typography>
+
+				{errors.map((msg) => (
+					<Grid item>
+						<Typography key={msg} variant="body1" color="primary">
+							{msg}
+						</Typography>
+					</Grid>
+				))}
 				{viewers === '' ? (
 					<CircularProgress variant="indeterminate" />
 				) : viewers.length > 0 ? (

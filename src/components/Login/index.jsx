@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
-const Login = ({ classes, logIn, errors, setErrors }) => {
+const Login = ({ classes, logIn, errors }) => {
 	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
 

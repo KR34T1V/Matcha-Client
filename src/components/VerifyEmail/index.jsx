@@ -9,6 +9,7 @@ import { Typography, TextField } from '@material-ui/core';
 const VerifyEmail = ({ classes, verifyUser }) => {
 	const [Email, setEmail] = useState('');
 	const [VerifyKey, setKey] = useState('');
+	const [errors, setErrors] = useState([]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -24,13 +25,13 @@ const VerifyEmail = ({ classes, verifyUser }) => {
 			}),
 		});
 
-		const data = await raw.json();
-		if (data.data.errors != null) {
-			console.log(data.data.errors);
-		}
-		if (data.data.result === 'Success') {
+		const { data } = await raw.json();
+
+		if (data.res === 'Error' && data.errors.length > 0) {
+			setErrors(data.errors);
+		} else if (data.res === 'Success') {
 			verifyUser(true);
-		}
+		} else setErrors(['Network Error']);
 	};
 
 	const resendEmail = async () => {
@@ -48,10 +49,13 @@ const VerifyEmail = ({ classes, verifyUser }) => {
 			},
 		);
 
-		const data = await raw.json;
-		if (data.error != null) {
-			console.log(data.error);
-		}
+		const { data } = await raw.json();
+
+		if (data.res === 'Error' && data.errors.length > 0) {
+			setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(['Email sent successfully']);
+		} else setErrors(['Network Error']);
 	};
 
 	return (
@@ -99,6 +103,18 @@ const VerifyEmail = ({ classes, verifyUser }) => {
 								color="primary"
 								onChange={(e) => setKey(e.target.value)}
 							/>
+
+							{errors.map((msg) => (
+								<Grid item>
+									<Typography
+										key={msg}
+										variant="body1"
+										color="primary"
+									>
+										{msg}
+									</Typography>
+								</Grid>
+							))}
 							<Button
 								fullWidth
 								type="submit"

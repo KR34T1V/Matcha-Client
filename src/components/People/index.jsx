@@ -14,10 +14,11 @@ import BlockIcon from '@material-ui/icons/Block';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import ReportIcon from '@material-ui/icons/ReportOutlined';
 
-const People = ({ classes, accessToken, errors, setErrors }) => {
+const People = ({ classes, accessToken, expiredToken }) => {
 	const [userProfile, setProfile] = useState({});
 	const [Liked, setLiked] = useState();
 	const [Blocked, setBlocked] = useState();
+	const [errors, setErrors] = useState([]);
 	const { id: personId } = useParams();
 
 	const likeUser = async () => {
@@ -32,15 +33,15 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 				profileId: personId,
 			}),
 		});
-		const data = await raw.json();
-		if (
-			data.data != null &&
-			data.data.errors != null &&
-			data.data.errors.length > 0
-		)
-			setErrors(data.data.errors);
-		if (data.data != null && data.data.res === 'Success') {
-			data.data.msg === 'Liked User' ? setLiked(true) : setLiked(false);
+
+		const { data } = await raw.json();
+
+		if (data.res === 'Error' && data.errors > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success' && data.msg != null) {
+			data.msg === 'Liked User' ? setLiked(true) : setLiked(false);
 		}
 	};
 
@@ -57,15 +58,13 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 				profileId: personId,
 			}),
 		});
-		const data = await raw.json();
-		if (
-			data.data != null &&
-			data.data.errors != null &&
-			data.data.errors.length > 0
-		)
-			setErrors(data.data.errors);
-		if (data.data != null && data.data.res === 'Success') {
-			data.data.msg === 'Blocked User'
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success' && data.msg != null) {
+			data.msg === 'Blocked User'
 				? setBlocked(true)
 				: setBlocked(false);
 		}
@@ -75,32 +74,28 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 			const raw = await fetch(
 				`http://localhost:3030/view/profile?AccessToken=${accessToken}&ProfileId=${personId}`,
 			);
-			const data = await raw.json();
-			if (data.data != null) {
-				let user = data.data;
-				let profile = {};
-				if (data.data.errors != null) {
-					setErrors(data.data.errors);
-				}
-				profile.Username = user.Username;
-				profile.Firstname = user.Firstname;
-				profile.Lastname = user.Lastname;
-				profile.Gender = user.Gender;
-				profile.Sexuality = user.SexualPreference;
-				profile.Age = user.Age;
-				profile.Biography = user.Biography;
-				profile.Interests = user.Interests;
-				profile.Fame = user.Fame;
-				profile.Avatar = user.Avatar;
-				profile.Images = user.Images;
-				profile.LastOnline = moment(user.AccessTime).fromNow();
+
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success' && data.user != null) {
+				const { user } = data;
+
 				setLiked(user.Liked);
 				setBlocked(user.Blocked);
-				setProfile(profile);
-			}
+				setProfile({
+					...user,
+					LastOnline: moment(user.AccessTime).fromNow(),
+				});
+			} else setErrors(['Network Error']);
 		};
+
 		getProfiles();
-	}, [accessToken, personId, setErrors]);
+	}, []);
 
 	return (
 		<Grid
@@ -111,17 +106,6 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Grid container justify="center" spacing={4}>
-					{errors.map((msg) => (
-						<Grid item>
-							<Typography
-								key={msg}
-								variant="body1"
-								color="primary"
-							>
-								{msg}
-							</Typography>
-						</Grid>
-					))}
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
@@ -150,10 +134,11 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 					userProfile.Images.length > 0 ? (
 						<Grid item className={classes.item}>
 							<Grid container justify="space-evenly">
-								{userProfile.Images.map((file) => (
+								{userProfile.Images.map((file, l) => (
 									<img
 										src={file}
 										alt="profile"
+										key={`Profile-${l}`}
 										className={classes.otherImg}
 										style={{ borderRadius: '10px' }}
 									/>
@@ -223,7 +208,7 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 							</Typography>
 							<Grid container justify="space-evenly">
 								{userProfile.Interests.map((tag) => (
-									<Grid item>
+									<Grid item key={tag}>
 										<Typography
 											variant="h6"
 											color="primary"
@@ -235,6 +220,18 @@ const People = ({ classes, accessToken, errors, setErrors }) => {
 							</Grid>
 						</Grid>
 					) : null}
+
+					{errors.map((msg) => (
+						<Grid item>
+							<Typography
+								key={msg}
+								variant="body1"
+								color="primary"
+							>
+								{msg}
+							</Typography>
+						</Grid>
+					))}
 
 					<Grid item className={classes.item}>
 						{Liked === false ? (

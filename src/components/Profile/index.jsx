@@ -16,7 +16,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import allTags from './tags';
 
-const Profile = ({ classes, accessToken, errors, setErrors }) => {
+const Profile = ({
+	classes,
+	accessToken,
+	errors,
+	setErrors,
+	expiredToken,
+}) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -45,6 +51,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 			'http://localhost:3030/user/updateProfile/avatar',
 		);
 		request.send(form);
+		// not touching this shit, I have no idea...
 		request.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
 				let data = JSON.parse(request.response);
@@ -67,6 +74,7 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 			'http://localhost:3030/user/updateProfile/gallery',
 		);
 		request.send(form);
+		// not touching this shit, I have no idea...
 		request.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
 				let data = JSON.parse(request.response);
@@ -94,8 +102,14 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				Biography: bio,
 			}),
 		});
-		const data = await raw.json();
-		console.log(data);
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors.length > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(['Profile saved successfully']);
+		} else setErrors(['Network Error']);
 	};
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
@@ -111,18 +125,14 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 				RePassword: repwd,
 			}),
 		});
-		const data = await raw.json();
-		if (
-			data.data != null &&
-			data.data.errors != null &&
-			data.data.errors.length > 0
-		)
-			setErrors(data.data.errors);
-		if (data.data != null && data.data.result === 'Success') {
-			console.log(data.data.Result);
-		} else {
-			setErrors(['Network Error']);
-		}
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors.length > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(['Password Updated successfully']);
+		} else setErrors(['Network Error']);
 	};
 
 	useEffect(() => {
@@ -130,24 +140,26 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 			const raw = await fetch(
 				`http://localhost:3030/user/profile?AccessToken=${accessToken}`,
 			);
-			const data = await raw.json();
-			if (data.data != null) {
-				if (data.data.errors != null && data.data.errors.length > 0) {
-					setErrors(data.data.errors);
-				}
-				const profile = data.data;
-				setUsername(profile.Username);
-				setFirst(profile.Firstname);
-				setLast(profile.Lastname);
-				setEmail(profile.Email);
-				setGender(profile.Gender);
-				setPreference(profile.SexualPreference);
-				setBio(profile.Biography);
-				if (profile.Avatar != null) setAvatar(profile.Avatar);
-				if (profile.Images != null && profile.Images.length > 0)
-					setOtherImg(profile.Images);
-				if (profile.Interests != null) setMyTags(profile.Interests);
-			}
+			const { data } = await raw.json();
+			if (data.res === 'Error' && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success' && data.Profile != null) {
+				const { Profile } = data;
+
+				setUsername(Profile.Username);
+				setFirst(Profile.Firstname);
+				setLast(Profile.Lastname);
+				setEmail(Profile.Email);
+				setGender(Profile.Gender);
+				setPreference(Profile.SexualPreference);
+				setBio(Profile.Biography);
+				if (Profile.Avatar != null) setAvatar(Profile.Avatar);
+				if (Profile.Images != null && Profile.Images.length > 0)
+					setOtherImg(Profile.Images);
+				if (Profile.Interests != null) setMyTags(Profile.Interests);
+			} else setErrors(['Network Error']);
 		};
 		getCurrentUser();
 	}, [accessToken, setErrors]);
@@ -169,7 +181,6 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 
 		if (item != null) {
 			const temp = [...myTags, item];
-			console.log(temp);
 			setMyTags(temp);
 		}
 	};
@@ -182,17 +193,6 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Grid container justify="center" spacing={4}>
-					{errors.map((msg) => (
-						<Grid item>
-							<Typography
-								key={msg}
-								variant="body1"
-								color="primary"
-							>
-								{msg}
-							</Typography>
-						</Grid>
-					))}
 					<Grid item className={classes.item}>
 						<Typography
 							variant="h4"
@@ -478,6 +478,18 @@ const Profile = ({ classes, accessToken, errors, setErrors }) => {
 											))}
 										</Grid>
 									</Grid>
+
+									{errors.map((msg) => (
+										<Grid item>
+											<Typography
+												key={msg}
+												variant="body1"
+												color="primary"
+											>
+												{msg}
+											</Typography>
+										</Grid>
+									))}
 
 									<Button
 										fullWidth
