@@ -54,7 +54,7 @@ const Register = ({ classes, history }) => {
 					RePassword: cpwd,
 				}),
 			});
-
+      
 			const { data } = await raw.json();
 			if (
 				data.res === 'Error' &&
@@ -117,15 +117,28 @@ const Register = ({ classes, history }) => {
 								onChange={(e) => setLast(e.target.value)}
 								value={last}
 							/>
-							<TextField
-								required
-								fullWidth
-								label="Birthdate"
-								type="date"
-								color="primary"
-								onChange={(e) => setBirthdate(e.target.value)}
-								value={dob}
-							/>
+							<Grid container direction="column">
+								<Typography
+									variant="caption"
+									color="textSecondary"
+									style={{
+										height: '10px',
+										marginTop: '4px',
+									}}
+								>
+									DoB
+								</Typography>
+								<TextField
+									required
+									fullWidth
+									type="date"
+									color="primary"
+									onChange={(e) =>
+										setBirthdate(e.target.value)
+									}
+									value={dob}
+								/>
+							</Grid>
 							<TextField
 								required
 								fullWidth
