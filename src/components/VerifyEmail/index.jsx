@@ -51,7 +51,7 @@ const VerifyEmail = ({ classes, verifyUser }) => {
 
 		const { data } = await raw.json();
 
-		if (data.res === 'Error' && data.errors.length > 0) {
+		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 			setErrors(data.errors);
 		} else if (data.res === 'Success') {
 			setErrors(['Email sent successfully']);

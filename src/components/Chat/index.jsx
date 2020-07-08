@@ -34,7 +34,7 @@ const Chat = ({ classes, accessToken, expiredToken }) => {
 			);
 			const { data } = await raw.json();
 
-			if (data.res === 'Error' && data.errors.length > 0) {
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 				if (data.errors[0] === 'AccessToken Expired') {
 					expiredToken();
 				} else setErrors(data.errors);

@@ -31,7 +31,7 @@ const PasswordReset = ({ classes, history }) => {
 
 		const { data } = await raw.json();
 
-		if (data.res === 'Error' && data.error.length > 0) {
+		if (data.res === 'Error' && data.errors != null && data.error.length > 0) {
 			setErrors(data.error);
 		}
 		if (data.res === 'Succes') {

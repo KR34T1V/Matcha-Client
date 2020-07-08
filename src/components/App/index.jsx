@@ -51,7 +51,7 @@ const App = ({ location, match, classes }) => {
 		});
 
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors.length > 0) {
+		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 			setErrors(data.errors);
 		} else if (data.res === 'Success' && data.AccessToken != null) {
 			const { AccessToken, Verified } = data;
