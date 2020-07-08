@@ -7,10 +7,22 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
+import Pagination from '@material-ui/lab/Pagination';
+import { Select, MenuItem } from '@material-ui/core';
 
-const Home = ({ classes, accessToken, expiredToken }) => {
+const Home = ({ classes, accessToken, setErrors, errors }) => {
 	const [profiles, setProfiles] = useState([]);
 	const [errors, setErrors] = useState([]);
+	const [unfilteredProfiles, setUnfilteredProfiles] = useState([]);
+	const [profiles, setProfiles] = useState([]);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [ageRange, setAgeRange] = useState([18, 100]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [maxPages, setMaxPages] = useState(1);
+	const [maxResults, setMaxResults] = useState(5);
+	const [sortValue, setSortValue] = useState('Username')
 
 	useEffect(() => {
 		const getProfiles = async () => {
@@ -24,11 +36,42 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 				} else setErrors(data.errors);
 			if (data.res === 'Success' && data.People != null) {
 				setProfiles(data.People);
+			const data = await raw.json();
+			if (
+				data.data != null &&
+				data.data.errors != null &&
+				data.data.errors.length > 0
+			)
+				setErrors(errors);
+			if (data.data != null && data.data.length > 0) {
+				setUnfilteredProfiles(data.data);
+				setProfiles(data.data.sort((a,b) => (a.Username > b.Username) ? 1 : ((b.Username > a.Username) ? -1 : 0)));
+				setMaxPages(data.data.length/maxResults);
 			}
 		};
 
 		getProfiles();
 	}, [accessToken, setErrors, errors]);
+
+	function updateProfiles() {
+		setProfiles(unfilteredProfiles.filter((data) => {
+			if((data.Firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				data.Lastname.toLowerCase().includes(searchTerm.toLowerCase()) || 
+				data.Username.toLowerCase().includes(searchTerm.toLowerCase())) &&
+				(data.Age >= ageRange[0] && data.Age <= ageRange[1])){
+				return data
+			} else {
+				return null
+			}
+		}))
+		setMaxPages(profiles.length/maxResults)
+	}
+
+	function handleChange(e) {
+		if (e.target.name === "searchInput") {
+			setSearchTerm(e.target.value)
+		}
+	}
 
 	return (
 		<>
@@ -39,7 +82,48 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 					</Typography>
 				</Grid>
 			))}
-			{profiles.map(
+		<form className={classes.root} noValidate autoComplete="off">
+			<TextField
+				label="Search: "
+				type="input"
+				className={classes.tfield}
+				name="searchInput"
+				onChange={handleChange}
+			/>
+			<div className={classes.slider}>
+			<Typography id="range-slider" 
+					gutterBottom
+					color="secondary"
+					>
+				Age range
+			</Typography>
+			<Slider
+				name="ageRange"
+				value={ageRange}
+				onChange={(e, age) => setAgeRange(age)}
+				min={18}
+				step={1}
+				valueLabelDisplay="auto"
+				aria-labelledby="range-slider"
+				getArialValueText={ageRange}
+				/>
+			<Button
+			color="secondary"
+			variant="outlined"
+			onClick={updateProfiles}>
+				Filter
+				</Button>
+				<Select
+					value={sortValue}
+					className={classes.tfield}
+					onChange={(e) => setSortValue(e.target.value)}>
+					<MenuItem value={'Username'}>Username</MenuItem>
+					<MenuItem value={'Age'}>Age</MenuItem>
+				</Select>
+			</div>
+				</form>
+			{profiles.sort((a,b) => (a[sortValue] > b[sortValue]) ? 1 : ((b[sortValue] > a[sortValue]) ? -1 : 0))
+			.slice((currentPage-1)*maxResults, currentPage*maxResults).map(
 				({
 					Username,
 					Firstname,
@@ -134,6 +218,13 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 					</Grid>
 				),
 			)}
+
+			<Pagination count={maxPages}
+			variant="outlined"
+			color="primary"
+			justify="center"
+			className={classes.pagenumber}
+			onChange={(e, page) => setCurrentPage(page)}/>
 		</>
 	);
 };
@@ -161,6 +252,43 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.primary.main,
 		marginTop: theme.spacing(1),
 		marginBottom: theme.spacing(1),
+	},
+	tfield: {
+		'& label.Mui-focused': {
+			color: theme.palette.secondary.main,
+		},
+		'& label': {
+			color: theme.palette.secondary.main,
+		},
+		'& .MuiInputBase-input': {
+			color: theme.palette.secondary.main,
+		},
+		'& .MuiInput-underline:before': {
+			borderBottomColor: theme.palette.secondary.main,
+		},
+		'& .MuiInput-underline:after': {
+			borderBottomColor: theme.palette.secondary.main,
+		},
+		'& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+			borderBottomColor: theme.palette.secondary.main,
+		},
+		'& .MuiSelect-icon': {
+			color: theme.palette.secondary.main,
+		},
+	},
+	slider: {
+		width: 300,
+		'& .MuiSlider-thumb': {
+			color: theme.palette.secondary.main,
+		},
+		'& .MuiSlider-track': {
+			color: theme.palette.secondary.main,
+		},
+	},
+	pagenumber: {
+		'& .MuiPagination-ul': {
+			backgroundColor: theme.palette.secondary.main,
+		},
 	},
 });
 
