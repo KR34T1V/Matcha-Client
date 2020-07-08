@@ -36,10 +36,26 @@ const Register = ({ classes, history }) => {
 		e.preventDefault();
 
 		const submit = async () => {
-			const raw = await fetch('http://localhost:3030/register');
-
+			const raw = await fetch('http://localhost:3030/register', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				Username: username,
+				Firstname: first,
+				Lastname: last,
+				Email: email,
+				Birthdate: dob,
+				Gender: gender,
+				SexualPreference: preference,
+				Password: pwd,
+				RePassword: cpwd
+			}),
+		});
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.error.length > 0) {
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 				setErrors(data.errors);
 			} else if (data.res === 'Success') {
 				history.push('/login');
