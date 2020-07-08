@@ -3,29 +3,31 @@ import { NavLink } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
-const Viewed = ({ classes, accessToken }) => {
-	const [viewers, setViewers] = useState('');
+const Blocked = ({ classes, accessToken, expiredToken }) => {
+	const [blocked, setBlocked] = useState('');
 	const [errors, setErrors] = useState([]);
 
 	useEffect(() => {
-		const fetchViewed = async () => {
+		const getBlocked = async () => {
 			const raw = await fetch(
-				`http://localhost:3030/getProfileViews?AccessToken=${accessToken}`,
+				`http://localhost:3030/getProfileBlocked?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
 			if (data.res === 'Error' && data.errors.length > 0) {
-				setErrors(data.errors);
-			} else if (data.Viewers != null) {
-				setViewers(data.Viewers);
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.Blocked != null) {
+				setBlocked(data.Blocked);
 			} else setErrors(['Network Error']);
 		};
 
-		fetchViewed();
+		getBlocked();
 	}, [accessToken]);
 
 	return (
@@ -37,7 +39,7 @@ const Viewed = ({ classes, accessToken }) => {
 		>
 			<Paper elevation={4} className={classes.paper}>
 				<Typography variant="h4" align="center" color="primary">
-					Viewers
+					Blocked Users
 				</Typography>
 
 				{errors.map((msg) => (
@@ -47,19 +49,20 @@ const Viewed = ({ classes, accessToken }) => {
 						</Typography>
 					</Grid>
 				))}
-				{viewers === '' ? (
+
+				{blocked === '' ? (
 					<CircularProgress variant="indeterminate" />
-				) : viewers.length > 0 ? (
+				) : blocked.length > 0 ? (
 					<Grid>
-						{viewers.map((viewer) => {
+						{blocked.map((blocked) => {
 							return (
 								<NavLink
-									to={`/people/${viewer.Id}`}
+									to={`/people/${blocked.Id}`}
 									className={classes.link}
 								>
 									<Grid
 										container
-										key={viewer.Id}
+										key={blocked.Id}
 										direction="column"
 										className={classes.item}
 									>
@@ -69,7 +72,7 @@ const Viewed = ({ classes, accessToken }) => {
 												color="primary"
 												align="center"
 											>
-												{viewer.Username}
+												{blocked.Username}
 											</Typography>
 										</Grid>
 										<Grid item>
@@ -78,7 +81,7 @@ const Viewed = ({ classes, accessToken }) => {
 												color="primary"
 												align="center"
 											>
-												Fame Rating: {viewer.Fame}
+												Fame Rating: {blocked.Fame}
 											</Typography>
 										</Grid>
 									</Grid>
@@ -103,7 +106,7 @@ const Viewed = ({ classes, accessToken }) => {
 							align="center"
 							color="primary"
 						>
-							No Viewers yet...
+							No blocked users, yet...
 						</Typography>
 						<NavLink to="/profile">
 							<Button
@@ -156,4 +159,4 @@ const styles = (theme) => ({
 	},
 });
 
-export default withStyles(styles)(Viewed);
+export default withStyles(styles)(Blocked);
