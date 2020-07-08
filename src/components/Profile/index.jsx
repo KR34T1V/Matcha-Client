@@ -81,7 +81,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 		};
 	};
 
-	const deleteProfile = async function (){
+	const deleteProfile = async function () {
 		const raw = await fetch('http://localhost:3030/user/delete', {
 			method: 'post',
 			headers: {
@@ -90,20 +90,20 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			},
 			body: JSON.stringify({
 				AccessToken: accessToken,
-				Password: delpwd
+				Password: delpwd,
 			}),
 		});
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors.length > 0){
+		if (data.res === 'Error' && data.errors.length > 0) {
 			if (data.errors[0] === 'AccessToken Expired') {
 				expiredToken();
 			} else setErrors(data.errors);
 		} else if (data.res === 'Success') {
-			setErrors(["Account deleted, you can leave now"])
+			setErrors(['Account deleted, you can leave now']);
 		} else {
-			setErrors(["Network Error"]);
+			setErrors(['Network Error']);
 		}
-	}
+	};
 
 	const saveProfile = async function () {
 		const raw = await fetch('http://localhost:3030/user/updateProfile', {
@@ -121,7 +121,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				Gender: gender,
 				SexualPreference: preference,
 				Biography: bio,
-				Interests: myTags
+				Interests: myTags,
 			}),
 		});
 		const { data } = await raw.json();
@@ -559,7 +559,10 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										Change your password
 									</Button>
 
-									<NavLink to={`/viewed`}>
+									<NavLink
+										to={`/viewed`}
+										className={classes.noUnder}
+									>
 										<Button
 											fullWidth
 											type="submit"
@@ -570,7 +573,10 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										</Button>
 									</NavLink>
 
-									<NavLink to={`/liked`}>
+									<NavLink
+										to={`/liked`}
+										className={classes.noUnder}
+									>
 										<Button
 											fullWidth
 											type="submit"
@@ -581,7 +587,10 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										</Button>
 									</NavLink>
 
-									<NavLink to="/connexions">
+									<NavLink
+										to="/connexions"
+										className={classes.noUnder}
+									>
 										<Button
 											fullWidth
 											type="submit"
@@ -592,7 +601,10 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										</Button>
 									</NavLink>
 
-									<NavLink to="/Blocked">
+									<NavLink
+										to="/Blocked"
+										className={classes.noUnder}
+									>
 										<Button
 											fullWidth
 											type="submit"
@@ -618,9 +630,13 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										className={classes.button}
 										onClick={() => deleteProfile()}
 									>
-										Delete This Account Forever, Permanently, Gone!
+										Delete This Account Forever,
+										Permanently, Gone!
 									</Button>
-									<NavLink to="/">
+									<NavLink
+										to="/"
+										className={classes.noUnder}
+									>
 										<Button
 											fullWidth
 											type="submit"
@@ -678,6 +694,9 @@ const styles = (theme) => ({
 		'&:hover': {
 			borderBottom: `1px dotted ${theme.palette.secondary.main}`,
 		},
+	},
+	noUnder: {
+		textDecoration: 'none',
 	},
 	radioTitle: {
 		borderBottom: `1px dotted ${theme.palette.primary.main}`,

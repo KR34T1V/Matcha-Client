@@ -74,7 +74,10 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 										<img
 											src={Avatar}
 											alt="profile"
-											style={{ borderRadius: '10px' }}
+											style={{
+												borderRadius: '10px',
+												width: '100%',
+											}}
 										/>
 									</Grid>
 								</Grid>
@@ -119,7 +122,10 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 								</Grid>
 
 								<Grid item className={classes.item}>
-									<NavLink to={`/people/${Id}`}>
+									<NavLink
+										to={`/people/${Id}`}
+										className={classes.link}
+									>
 										<Button
 											fullWidth
 											variant="contained"
@@ -161,6 +167,9 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.primary.main,
 		marginTop: theme.spacing(1),
 		marginBottom: theme.spacing(1),
+	},
+	link: {
+		textDecoration: 'none',
 	},
 });
 
