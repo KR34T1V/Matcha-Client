@@ -567,6 +567,17 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										</Button>
 									</NavLink>
 
+									<NavLink to="/Blocked">
+										<Button
+											fullWidth
+											type="submit"
+											variant="contained"
+											className={classes.button}
+										>
+											Blocked
+										</Button>
+									</NavLink>
+
 									<NavLink to="/">
 										<Button
 											fullWidth

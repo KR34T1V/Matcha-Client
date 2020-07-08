@@ -22,7 +22,7 @@ const Liked = ({ classes, accessToken, expiredToken }) => {
 				if (data.errors[0] === 'AccessToken Expired') {
 					expiredToken();
 				} else setErrors(data.errors);
-			} else if (data.Likers != null && data.Likers.length > 0) {
+			} else if (data.Likers != null) {
 				setLikers(data.Likers);
 			} else setErrors(['Network Error']);
 		};

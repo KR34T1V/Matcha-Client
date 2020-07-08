@@ -16,6 +16,7 @@ import Profile from '../Profile';
 import People from '../People';
 import Viewed from '../Viewed';
 import Liked from '../Liked';
+import Blocked from '../Blocked';
 import PasswordReset from '../PasswordReset';
 import VerifyEmail from '../VerifyEmail';
 import Chat from '../Chat';
@@ -136,6 +137,16 @@ const App = ({ location, match, classes }) => {
 								expiredToken={expiredToken}
 							>
 								<Liked
+									accessToken={accessToken}
+									expiredToken={expiredToken}
+								/>
+							</Route>
+							<Route
+								exact
+								path="/blocked"
+								expiredToken={expiredToken}
+							>
+								<Blocked
 									accessToken={accessToken}
 									expiredToken={expiredToken}
 								/>
