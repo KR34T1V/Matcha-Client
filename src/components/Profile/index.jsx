@@ -34,6 +34,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 	const [pwd, setPwd] = useState('');
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
+	const [delpwd, setDelPwd] = useState('');
 
 	const uploadAvatar = async function (img) {
 		setAvatarPreview(img);
@@ -79,6 +80,30 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			}
 		};
 	};
+
+	const deleteProfile = async function (){
+		const raw = await fetch('http://localhost:3030/user/delete', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				Password: delpwd
+			}),
+		});
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors.length > 0){
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(["Account deleted, you can leave now"])
+		} else {
+			setErrors(["Network Error"]);
+		}
+	}
 
 	const saveProfile = async function () {
 		const raw = await fetch('http://localhost:3030/user/updateProfile', {
@@ -577,7 +602,24 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 											Blocked
 										</Button>
 									</NavLink>
-
+									<TextField
+										fullWidth
+										label="Password to delete account"
+										type="password"
+										color="primary"
+										onChange={(e) =>
+											setDelPwd(e.target.value)
+										}
+									/>
+									<Button
+										fullWidth
+										type="submit"
+										variant="contained"
+										className={classes.button}
+										onClick={() => deleteProfile()}
+									>
+										Delete This Account Forever, Permanently, Gone!
+									</Button>
 									<NavLink to="/">
 										<Button
 											fullWidth
