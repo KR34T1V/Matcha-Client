@@ -16,13 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import allTags from './tags';
 
-const Profile = ({
-	classes,
-	accessToken,
-	errors,
-	setErrors,
-	expiredToken,
-}) => {
+const Profile = ({ classes, accessToken, expiredToken }) => {
 	const [username, setUsername] = useState('');
 	const [first, setFirst] = useState('');
 	const [last, setLast] = useState('');
@@ -34,6 +28,8 @@ const Profile = ({
 	const [otherImg, setOtherImg] = useState([]);
 	const [myTags, setMyTags] = useState([]);
 	const [bio, setBio] = useState('');
+
+	const [errors, setErrors] = useState([]);
 
 	const [pwd, setPwd] = useState('');
 	const [npwd, setNPwd] = useState('');
