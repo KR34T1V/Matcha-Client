@@ -96,6 +96,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				Gender: gender,
 				SexualPreference: preference,
 				Biography: bio,
+				Interests: myTags
 			}),
 		});
 		const { data } = await raw.json();
