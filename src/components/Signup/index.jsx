@@ -37,25 +37,30 @@ const Register = ({ classes, history }) => {
 
 		const submit = async () => {
 			const raw = await fetch('http://localhost:3030/register', {
-			method: 'post',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				Username: username,
-				Firstname: first,
-				Lastname: last,
-				Email: email,
-				Birthdate: dob,
-				Gender: gender,
-				SexualPreference: preference,
-				Password: pwd,
-				RePassword: cpwd
-			}),
-		});
+				method: 'post',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					Username: username,
+					Firstname: first,
+					Lastname: last,
+					Email: email,
+					Birthdate: dob,
+					Gender: gender,
+					SexualPreference: preference,
+					Password: pwd,
+					RePassword: cpwd,
+				}),
+			});
+      
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+			if (
+				data.res === 'Error' &&
+				data.errors != null &&
+				data.errors.length > 0
+			) {
 				setErrors(data.errors);
 			} else if (data.res === 'Success') {
 				history.push('/login');
@@ -112,15 +117,28 @@ const Register = ({ classes, history }) => {
 								onChange={(e) => setLast(e.target.value)}
 								value={last}
 							/>
-							<TextField
-								required
-								fullWidth
-								label="Birthdate"
-								type="date"
-								color="primary"
-								onChange={(e) => setBirthdate(e.target.value)}
-								value={dob}
-							/>
+							<Grid container direction="column">
+								<Typography
+									variant="caption"
+									color="textSecondary"
+									style={{
+										height: '10px',
+										marginTop: '4px',
+									}}
+								>
+									DoB
+								</Typography>
+								<TextField
+									required
+									fullWidth
+									type="date"
+									color="primary"
+									onChange={(e) =>
+										setBirthdate(e.target.value)
+									}
+									value={dob}
+								/>
+							</Grid>
 							<TextField
 								required
 								fullWidth
@@ -236,7 +254,10 @@ const Register = ({ classes, history }) => {
 							>
 								Register
 							</Button>
-							<NavLink to="login">
+							<NavLink
+								to="login"
+								style={{ textDecoration: 'none' }}
+							>
 								<Button
 									fullWidth
 									type="submit"
@@ -264,6 +285,10 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 		width: '40%',
 		marginLeft: '30%',
+		[theme.breakpoints.down('sm')]: {
+			width: '90%',
+			marginLeft: '0',
+		},
 	},
 	item: {
 		width: '90%',

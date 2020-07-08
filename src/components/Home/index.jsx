@@ -11,38 +11,25 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import Pagination from '@material-ui/lab/Pagination';
 import { Select, MenuItem } from '@material-ui/core';
-<<<<<<< HEAD
-
 
 const Home = ({ classes, accessToken, expiredToken }) => {
 	const [errors, setErrors] = useState([]);
-=======
-
-const Home = ({ classes, accessToken, setErrors, errors }) => {
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 	const [unfilteredProfiles, setUnfilteredProfiles] = useState([]);
 	const [profiles, setProfiles] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [ageRange, setAgeRange] = useState([18, 100]);
-<<<<<<< HEAD
 	const [fameRange, setFameRange] = useState([0, 100]);
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 	const [currentPage, setCurrentPage] = useState(1);
 	const [maxPages, setMaxPages] = useState(1);
 	const [maxResults, setMaxResults] = useState(5);
 	const [sortValue, setSortValue] = useState('Username')
-<<<<<<< HEAD
 	const [ascDesc, setAscDesc] = useState(1)
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 
 	useEffect(() => {
 		const getProfiles = async () => {
 			const raw = await fetch(
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
-<<<<<<< HEAD
 			const { data } = await raw.json();
 			if (data.res === 'Error' && data.errors.length > 0)
 				if (data.errors[0] === 'AccessToken Expired') {
@@ -52,19 +39,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 				setUnfilteredProfiles(data.People);
 				setProfiles(data.People.sort((a,b) => (a.Username > b.Username) ? 1 : ((b.Username > a.Username) ? -1 : 0)));
 				setMaxPages(Math.floor(data.People.length/maxResults));
-=======
-			const data = await raw.json();
-			if (
-				data.data != null &&
-				data.data.errors != null &&
-				data.data.errors.length > 0
-			)
-				setErrors(errors);
-			if (data.data != null && data.data.length > 0) {
-				setUnfilteredProfiles(data.data);
-				setProfiles(data.data.sort((a,b) => (a.Username > b.Username) ? 1 : ((b.Username > a.Username) ? -1 : 0)));
-				setMaxPages(data.data.length/maxResults);
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 			}
 		};
 
@@ -76,22 +50,14 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 			if((data.Firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				data.Lastname.toLowerCase().includes(searchTerm.toLowerCase()) || 
 				data.Username.toLowerCase().includes(searchTerm.toLowerCase())) &&
-<<<<<<< HEAD
 				(data.Age >= ageRange[0] && data.Age <= ageRange[1]) &&
 				(data.FameRating >= fameRange[0] && data.FameRating <= fameRange[1])){
-=======
-				(data.Age >= ageRange[0] && data.Age <= ageRange[1])){
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 				return data
 			} else {
 				return null
 			}
 		}))
-<<<<<<< HEAD
 		setMaxPages(Math.floor(profiles.length/maxResults))
-=======
-		setMaxPages(profiles.length/maxResults)
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 	}
 
 	function handleChange(e) {
@@ -102,7 +68,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 
 	return (
 		<>
-<<<<<<< HEAD
 			{errors.map((msg) => (
 				<Grid item>
 					<Typography key={msg} variant="body1" color="secondary">
@@ -110,8 +75,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 					</Typography>
 				</Grid>
 			))}
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 		<form className={classes.root} noValidate autoComplete="off">
 			<TextField
 				label="Search: "
@@ -137,7 +100,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 				aria-labelledby="range-slider"
 				getArialValueText={ageRange}
 				/>
-<<<<<<< HEAD
 			<Typography id="range-slider" 
 					gutterBottom
 					color="secondary"
@@ -155,8 +117,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 				aria-labelledby="range-slider"
 				getArialValueText={fameRange}
 				/>
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 			<Button
 			color="secondary"
 			variant="outlined"
@@ -164,16 +124,12 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 				Filter
 				</Button>
 				<Select
-<<<<<<< HEAD
 					style={{width : "100%"}}
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 					value={sortValue}
 					className={classes.tfield}
 					onChange={(e) => setSortValue(e.target.value)}>
 					<MenuItem value={'Username'}>Username</MenuItem>
 					<MenuItem value={'Age'}>Age</MenuItem>
-<<<<<<< HEAD
 					<MenuItem value={'FameRating'}>Fame</MenuItem>
 				</Select>
 				<Select
@@ -187,12 +143,6 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 			</div>
 				</form>
 			{profiles.sort((a,b) => (a[sortValue] > b[sortValue]) ? 1*ascDesc : ((b[sortValue] > a[sortValue]) ? -1*ascDesc : 0))
-=======
-				</Select>
-			</div>
-				</form>
-			{profiles.sort((a,b) => (a[sortValue] > b[sortValue]) ? 1 : ((b[sortValue] > a[sortValue]) ? -1 : 0))
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 			.slice((currentPage-1)*maxResults, currentPage*maxResults).map(
 				({
 					Username,
@@ -239,7 +189,10 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 										<img
 											src={Avatar}
 											alt="profile"
-											style={{ borderRadius: '10px' }}
+											style={{
+												borderRadius: '10px',
+												width: '100%',
+											}}
 										/>
 									</Grid>
 								</Grid>
@@ -284,7 +237,10 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 								</Grid>
 
 								<Grid item className={classes.item}>
-									<NavLink to={`/people/${Id}`}>
+									<NavLink
+										to={`/people/${Id}`}
+										className={classes.link}
+									>
 										<Button
 											fullWidth
 											variant="contained"
@@ -299,23 +255,16 @@ const Home = ({ classes, accessToken, setErrors, errors }) => {
 					</Grid>
 				),
 			)}
-
-<<<<<<< HEAD
 		<Grid
 		container
 		justify="center">
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 			<Pagination count={maxPages}
 			variant="outlined"
 			color="primary"
 			justify="center"
 			className={classes.pagenumber}
 			onChange={(e, page) => setCurrentPage(page)}/>
-<<<<<<< HEAD
 		</Grid>
-=======
->>>>>>> 015870fc269e38a9e9cbb57a1cc6aed16df99469
 		</>
 	);
 };
@@ -380,6 +329,8 @@ const styles = (theme) => ({
 		'& .MuiPagination-ul': {
 			backgroundColor: theme.palette.secondary.main,
 		},
+	link: {
+		textDecoration: 'none',
 	},
 });
 
