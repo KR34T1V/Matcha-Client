@@ -94,14 +94,16 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			}),
 		});
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setErrors(data.errors);
-		} else if (data.res === 'Success') {
-			setErrors(['Account deleted, you can leave now']);
-		} else {
-			setErrors(['Network Error']);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success') {
+				setErrors(['Account deleted, you can leave now']);
+			} else {
+				setErrors(['Network Error']);
+			}
 		}
 	};
 
@@ -125,14 +127,17 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			}),
 		});
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setErrors(data.errors);
-		} else if (data.res === 'Success') {
-			setErrors(['Profile saved successfully']);
-		} else setErrors(['Network Error']);
-	};
+		if (data!= null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success') {
+				setErrors(['Profile saved successfully']);
+			} else setErrors(['Network Error']);
+		};
+	}
+
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
 			method: 'post',
@@ -148,13 +153,15 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			}),
 		});
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setErrors(data.errors);
-		} else if (data.res === 'Success') {
-			setErrors(['Password Updated successfully']);
-		} else setErrors(['Network Error']);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success') {
+				setErrors(['Password Updated successfully']);
+			} else setErrors(['Network Error']);
+		}
 	};
 
 	useEffect(() => {
@@ -163,25 +170,27 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/user/profile?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-				if (data.errors[0] === 'AccessToken Expired') {
-					expiredToken();
-				} else setErrors(data.errors);
-			} else if (data.res === 'Success' && data.Profile != null) {
-				const { Profile } = data;
-
-				setUsername(Profile.Username);
-				setFirst(Profile.Firstname);
-				setLast(Profile.Lastname);
-				setEmail(Profile.Email);
-				setGender(Profile.Gender);
-				setPreference(Profile.SexualPreference);
-				setBio(Profile.Biography);
-				if (Profile.Avatar != null) setAvatar(Profile.Avatar);
-				if (Profile.Images != null && Profile.Images.length > 0)
-					setOtherImg(Profile.Images);
-				if (Profile.Interests != null) setMyTags(Profile.Interests);
-			} else setErrors(['Network Error']);
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				} else if (data.res === 'Success' && data.Profile != null) {
+					const { Profile } = data;
+	
+					setUsername(Profile.Username);
+					setFirst(Profile.Firstname);
+					setLast(Profile.Lastname);
+					setEmail(Profile.Email);
+					setGender(Profile.Gender);
+					setPreference(Profile.SexualPreference);
+					setBio(Profile.Biography);
+					if (Profile.Avatar != null) setAvatar(Profile.Avatar);
+					if (Profile.Images != null && Profile.Images.length > 0)
+						setOtherImg(Profile.Images);
+					if (Profile.Interests != null) setMyTags(Profile.Interests);
+				} else setErrors(['Network Error']);
+			}
 		};
 		getCurrentUser();
 	}, [accessToken, setErrors]);

@@ -31,14 +31,16 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0)
-				if (data.errors[0] === 'AccessToken Expired') {
-					expiredToken();
-				} else setErrors(data.errors);
-			if (data.res === 'Success' && data.People != null) {
-				setUnfilteredProfiles(data.People);
-				setProfiles(data.People.sort((a,b) => (a.Username > b.Username) ? 1 : ((b.Username > a.Username) ? -1 : 0)));
-				setMaxPages(Math.floor(data.People.length/maxResults));
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0)
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				if (data.res === 'Success' && data.People != null) {
+					setUnfilteredProfiles(data.People);
+					setProfiles(data.People.sort((a,b) => (a.Username > b.Username) ? 1 : ((b.Username > a.Username) ? -1 : 0)));
+					setMaxPages(Math.floor(data.People.length/maxResults));
+				}
 			}
 		};
 
