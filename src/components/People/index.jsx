@@ -181,7 +181,7 @@ const People = ({ classes, accessToken, expiredToken }) => {
 							align="center"
 							color="primary"
 						>
-							Sexuality: {userProfile.Sexuality}
+							Sexuality: {userProfile.SexualPreference}
 						</Typography>
 
 						<Typography
