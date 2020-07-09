@@ -12,11 +12,28 @@ import Button from '@material-ui/core/Button';
 const Login = ({ classes, logIn, errors }) => {
 	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
+	const [long, setLong] = useState('');
+	const [lat, setLat] = useState('');
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		logIn(email, pwd);
+		logIn(email, pwd, long, lat);
 	};
+
+	function getLocation() {
+		if (navigator.geolocation) {
+			return navigator.geolocation.getCurrentPosition(showPosition);
+		}
+	}
+	
+	function showPosition(position) {
+		setLong(position.coords.longitude);
+		setLat(position.coords.latitude);
+		console.log(position);
+		return position;
+	  }
+
+	  getLocation();
 
 	return (
 		<Grid
@@ -68,7 +85,6 @@ const Login = ({ classes, logIn, errors }) => {
 									</Typography>
 								</Grid>
 							))}
-
 							<Button
 								fullWidth
 								type="submit"
@@ -77,6 +93,7 @@ const Login = ({ classes, logIn, errors }) => {
 							>
 								Log In
 							</Button>
+
 
 							<NavLink
 								to="/signup"
