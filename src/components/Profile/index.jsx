@@ -122,6 +122,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				Lastname: last,
 				Gender: gender,
 				SexualPreference: preference,
+				NewEmail: email,
 				Biography: bio,
 				Interests: myTags,
 			}),
