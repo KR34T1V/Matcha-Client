@@ -48,16 +48,18 @@ const NotificationMenu = ({ classes, expiredToken }) => {
 			`http://localhost:3030/user/notifications?AccessToken=${accToken}`,
 		);
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setNotif(data.errors);
-		} else if (
-			data.notifications != null &&
-			data.notifications.length > 0
-		) {
-			setNotif(data.notifications);
-		} else setNotif([]);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setNotif(data.errors);
+			} else if (
+				data.notifications != null &&
+				data.notifications.length > 0
+			) {
+				setNotif(data.notifications);
+			} else setNotif([]);
+		}
 	};
 
 	useEffect(() => {

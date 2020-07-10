@@ -33,19 +33,20 @@ const Chat = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/user/chat?AccessToken=${accessToken}&Id=${currentId}`,
 			);
 			const { data } = await raw.json();
-
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-				if (data.errors[0] === 'AccessToken Expired') {
-					expiredToken();
-				} else setErrors(data.errors);
-			} else if (
-				data.res === 'Success' &&
-				data.Chat != null &&
-				data.Username != null
-			) {
-				const { Chat, Username } = data;
-				setMessages(Chat);
-				setUsername(Username);
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				} else if (
+					data.res === 'Success' &&
+					data.Chat != null &&
+					data.Username != null
+				) {
+					const { Chat, Username } = data;
+					setMessages(Chat);
+					setUsername(Username);
+				}
 			}
 		}
 	};
@@ -65,14 +66,15 @@ const Chat = ({ classes, accessToken, expiredToken }) => {
 		});
 
 		const { data } = await raw.json();
-
-		if (data.res === 'Error' && data.errors.length > 0) {
-			setErrors(data.errors);
-		} else if (data.res === 'Success' && data.Messages != null) {
-			setMessage('');
-			setMessages(data.Messages);
-			setErrors([]);
-		} else setErrors(['Network Error']);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors.length > 0) {
+				setErrors(data.errors);
+			} else if (data.res === 'Success' && data.Messages != null) {
+				setMessage('');
+				setMessages(data.Messages);
+				setErrors([]);
+			} else setErrors(['Network Error']);
+		}
 	};
 
 	useEffect(() => {

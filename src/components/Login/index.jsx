@@ -29,7 +29,6 @@ const Login = ({ classes, logIn, errors }) => {
 	function showPosition(position) {
 		setLong(position.coords.longitude);
 		setLat(position.coords.latitude);
-		console.log(position);
 		return position;
 	  }
 

@@ -18,14 +18,16 @@ const Blocked = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/getProfileBlocked?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-				if (data.errors[0] === 'AccessToken Expired') {
-					expiredToken();
-				} else setErrors(data.errors);
-			} else if (data.Blocked != null) {
-				setBlocked(data.Blocked);
-			} else setErrors(['Network Error']);
-		};
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				} else if (data.Blocked != null) {
+					setBlocked(data.Blocked);
+				} else setErrors(['Network Error']);
+			};
+		}
 
 		getBlocked();
 	}, [accessToken]);
