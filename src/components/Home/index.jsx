@@ -12,6 +12,7 @@ import Slider from '@material-ui/core/Slider';
 import Pagination from '@material-ui/lab/Pagination';
 import { Select, MenuItem } from '@material-ui/core';
 
+
 const Home = ({ classes, accessToken, expiredToken }) => {
 	const [errors, setErrors] = useState([]);
 	const [unfilteredProfiles, setUnfilteredProfiles] = useState([]);
@@ -31,7 +32,7 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/home?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0)
+			if (data.res === 'Error' && data.errors.length > 0)
 				if (data.errors[0] === 'AccessToken Expired') {
 					expiredToken();
 				} else setErrors(data.errors);
@@ -131,6 +132,7 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 					<MenuItem value={'Username'}>Username</MenuItem>
 					<MenuItem value={'Age'}>Age</MenuItem>
 					<MenuItem value={'FameRating'}>Fame</MenuItem>
+					<MenuItem value={'Distance'}>Location</MenuItem>
 				</Select>
 				<Select
 					style={{width : "100%"}}
@@ -152,6 +154,7 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 					Avatar,
 					FameRating,
 					Age,
+					Distance,
 					Biography,
 				}) => (
 					<Grid
@@ -189,10 +192,7 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 										<img
 											src={Avatar}
 											alt="profile"
-											style={{
-												borderRadius: '10px',
-												width: '100%',
-											}}
+											style={{ borderRadius: '10px' }}
 										/>
 									</Grid>
 								</Grid>
@@ -232,15 +232,22 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 										align="center"
 										color="primary"
 									>
+										Distance: {Distance}km away
+									</Typography>
+								</Grid>
+
+								<Grid item className={classes.item}>
+									<Typography
+										variant="h6"
+										align="center"
+										color="primary"
+									>
 										{Biography}
 									</Typography>
 								</Grid>
 
 								<Grid item className={classes.item}>
-									<NavLink
-										to={`/people/${Id}`}
-										className={classes.link}
-									>
+									<NavLink to={`/people/${Id}`}>
 										<Button
 											fullWidth
 											variant="contained"
@@ -255,6 +262,7 @@ const Home = ({ classes, accessToken, expiredToken }) => {
 					</Grid>
 				),
 			)}
+
 		<Grid
 		container
 		justify="center">
@@ -329,9 +337,6 @@ const styles = (theme) => ({
 		'& .MuiPagination-ul': {
 			backgroundColor: theme.palette.secondary.main,
 		},
-	},
-	link: {
-		textDecoration: 'none',
 	},
 });
 
