@@ -144,15 +144,14 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 		if (navigator.geolocation) {
 			return navigator.geolocation.getCurrentPosition(showPosition);
 		}
-	}
+	};
 	
 	function showPosition(position) {
 		setLong(position.coords.longitude);
 		setLat(position.coords.latitude);
-		console.log(position);
 		return position;
-	  }
 	}
+
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
 			method: 'post',
