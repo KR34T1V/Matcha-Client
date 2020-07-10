@@ -198,7 +198,7 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				expiredToken();
 			} else setErrors(data.errors);
 		} else if (data.res === 'Success') {
-			setErrors(['Password Updated successfully']);
+			setErrors(['Location updated successfully']);
 		} else setErrors(['Network Error']);
 	};
 
