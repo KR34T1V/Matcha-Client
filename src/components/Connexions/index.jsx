@@ -20,14 +20,16 @@ const Connexions = ({ classes, accessToken, expiredToken }) => {
 				`http://localhost:3030/user/connexions?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors > 0) {
-				if (data.errors[0] === 'AccessToken Expired') {
-					expiredToken();
-				} else setErrors(data.errors);
-			} else if (data.res === 'Success' && data.Connexions != null) {
-				setCons(data.Connexions);
-				setLoad(false);
-			} else setErrors(['Network Error']);
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors > 0) {
+					if (data.errors[0] === 'AccessToken Expired') {
+						expiredToken();
+					} else setErrors(data.errors);
+				} else if (data.res === 'Success' && data.Connexions != null) {
+					setCons(data.Connexions);
+					setLoad(false);
+				} else setErrors(['Network Error']);
+			}
 		};
 
 		fetchCons();

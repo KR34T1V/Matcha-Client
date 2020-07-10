@@ -56,15 +56,17 @@ const Register = ({ classes, history }) => {
 			});
       
 			const { data } = await raw.json();
-			if (
-				data.res === 'Error' &&
-				data.errors != null &&
-				data.errors.length > 0
-			) {
-				setErrors(data.errors);
-			} else if (data.res === 'Success') {
-				history.push('/login');
-			} else setErrors(['Network Error']);
+			if (data!= null){
+				if (
+					data.res === 'Error' &&
+					data.errors != null &&
+					data.errors.length > 0
+				) {
+					setErrors(data.errors);
+				} else if (data.res === 'Success') {
+					history.push('/login');
+				} else setErrors(['Network Error']);
+			}
 		};
 
 		submit();

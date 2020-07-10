@@ -35,13 +35,14 @@ const People = ({ classes, accessToken, expiredToken }) => {
 		});
 
 		const { data } = await raw.json();
-
-		if (data.res === 'Error' && data.errors > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setErrors(data.errors);
-		} else if (data.res === 'Success' && data.msg != null) {
-			data.msg === 'Liked User' ? setLiked(true) : setLiked(false);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success' && data.msg != null) {
+				data.msg === 'Liked User' ? setLiked(true) : setLiked(false);
+			}
 		}
 	};
 
@@ -59,14 +60,16 @@ const People = ({ classes, accessToken, expiredToken }) => {
 			}),
 		});
 		const { data } = await raw.json();
-		if (data.res === 'Error' && data.errors > 0) {
-			if (data.errors[0] === 'AccessToken Expired') {
-				expiredToken();
-			} else setErrors(data.errors);
-		} else if (data.res === 'Success' && data.msg != null) {
-			data.msg === 'Blocked User'
-				? setBlocked(true)
-				: setBlocked(false);
+		if (data!= null){
+			if (data.res === 'Error' && data.errors > 0) {
+				if (data.errors[0] === 'AccessToken Expired') {
+					expiredToken();
+				} else setErrors(data.errors);
+			} else if (data.res === 'Success' && data.msg != null) {
+				data.msg === 'Blocked User'
+					? setBlocked(true)
+					: setBlocked(false);
+			}
 		}
 	};
 	useEffect(() => {
@@ -76,22 +79,24 @@ const People = ({ classes, accessToken, expiredToken }) => {
 			);
 
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-				if (data.errors[0] === 'AccessToken Expired') {
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 					if (data.errors[0] === 'AccessToken Expired') {
-						expiredToken();
+						if (data.errors[0] === 'AccessToken Expired') {
+							expiredToken();
+						} else setErrors(data.errors);
 					} else setErrors(data.errors);
-				} else setErrors(data.errors);
-			} else if (data.res === 'Success' && data.user != null) {
-				const { user } = data;
-
-				setLiked(user.Liked);
-				setBlocked(user.Blocked);
-				setProfile({
-					...user,
-					LastOnline: moment(user.AccessTime).fromNow(),
-				});
-			} else setErrors(['Network Error']);
+				} else if (data.res === 'Success' && data.user != null) {
+					const { user } = data;
+	
+					setLiked(user.Liked);
+					setBlocked(user.Blocked);
+					setProfile({
+						...user,
+						LastOnline: moment(user.AccessTime).fromNow(),
+					});
+				} else setErrors(['Network Error']);
+			}
 		};
 
 		getProfiles();
@@ -176,7 +181,7 @@ const People = ({ classes, accessToken, expiredToken }) => {
 							align="center"
 							color="primary"
 						>
-							Sexuality: {userProfile.Sexuality}
+							Sexuality: {userProfile.SexualPreference}
 						</Typography>
 
 						<Typography

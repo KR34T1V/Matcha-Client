@@ -18,11 +18,13 @@ const Viewed = ({ classes, accessToken }) => {
 				`http://localhost:3030/getProfileViews?AccessToken=${accessToken}`,
 			);
 			const { data } = await raw.json();
-			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
-				setErrors(data.errors);
-			} else if (data.Viewers != null) {
-				setViewers(data.Viewers);
-			} else setErrors(['Network Error']);
+			if (data!= null){
+				if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+					setErrors(data.errors);
+				} else if (data.Viewers != null) {
+					setViewers(data.Viewers);
+				} else setErrors(['Network Error']);
+			}
 		};
 
 		fetchViewed();

@@ -30,13 +30,14 @@ const PasswordReset = ({ classes, history }) => {
 		});
 
 		const { data } = await raw.json();
-
-		if (data.res === 'Error' && data.errors != null && data.error.length > 0) {
-			setErrors(data.error);
+		if (data != null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				setErrors(data.error);
+			}
+			if (data.res === 'Success') {
+				history.push('/login');
+			} else setErrors(['Network Error']);
 		}
-		if (data.res === 'Succes') {
-			history.push('/login');
-		} else setErrors(['Network Error']);
 	};
 
 	const resendEmail = async () => {
@@ -54,12 +55,14 @@ const PasswordReset = ({ classes, history }) => {
 			},
 		);
 
-		const { data } = await raw.json;
-		if (data.res === 'Error' && data.errors.length > 0) {
-			setErrors(data.errors);
-		} else if (data.res === 'Success') {
-			setErrors(['Email sent successfully']);
-		} else setErrors(['Network Error']);
+		const { data } = await raw.json();
+		if (data != null){
+			if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+				setErrors(data.errors);
+			} else if (data.res === 'Success') {
+				setErrors(['Email sent successfully']);
+			} else setErrors(['Network Error']);
+		}
 	};
 
 	return (
