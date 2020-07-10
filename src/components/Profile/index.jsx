@@ -35,6 +35,9 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 	const [npwd, setNPwd] = useState('');
 	const [repwd, setRePwd] = useState('');
 	const [delpwd, setDelPwd] = useState('');
+	const [lat, setLat] = useState('');
+	const [long, setLong] = useState('');
+
 
 	const uploadAvatar = async function (img) {
 		setAvatarPreview(img);
@@ -133,6 +136,20 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			setErrors(['Profile saved successfully']);
 		} else setErrors(['Network Error']);
 	};
+
+	function getLocation() {
+		if (navigator.geolocation) {
+			return navigator.geolocation.getCurrentPosition(showPosition);
+		}
+	}
+	
+	function showPosition(position) {
+		setLong(position.coords.longitude);
+		setLat(position.coords.latitude);
+		console.log(position);
+		return position;
+	  }
+	  
 	const submitPwdChange = async function () {
 		const raw = await fetch('http://localhost:3030/user/passwordChange', {
 			method: 'post',
@@ -147,6 +164,30 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 				RePassword: repwd,
 			}),
 		});
+		const { data } = await raw.json();
+		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
+			if (data.errors[0] === 'AccessToken Expired') {
+				expiredToken();
+			} else setErrors(data.errors);
+		} else if (data.res === 'Success') {
+			setErrors(['Password Updated successfully']);
+		} else setErrors(['Network Error']);
+	};
+
+	const updateLocation = async function () {
+		getLocation();
+		const raw = await fetch('http://localhost:3030/user/locationUpdate', {
+			method: 'post',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				AccessToken: accessToken,
+				Lat: lat,
+				Long: long,
+			}),
+		})
 		const { data } = await raw.json();
 		if (data.res === 'Error' && data.errors != null && data.errors.length > 0) {
 			if (data.errors[0] === 'AccessToken Expired') {
@@ -569,6 +610,16 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 										Change your password
 									</Button>
 
+									<Button
+										fullWidth
+										type="submit"
+										variant="contained"
+										className={classes.button}
+										onClick={() => updateLocation()}
+										>
+											Update your location
+										</Button>
+
 									<NavLink
 										to={`/viewed`}
 										className={classes.noUnder}
@@ -668,6 +719,8 @@ const Profile = ({ classes, accessToken, expiredToken }) => {
 			</Paper>
 		</Grid>
 	);
+
+	
 };
 
 const styles = (theme) => ({
